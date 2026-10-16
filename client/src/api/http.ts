@@ -1,16 +1,26 @@
-export const USE_MOCKS = import.meta.env.VITE_USE_MOCKS === 'true';
+const API_URL = "http://localhost:3000";
+export const USE_MOCKS = true;
 
-export async function request<T>(method: string, url: string, body?: unknown): Promise<T> {
-  const res = await fetch(url, {
+export async function request<T>(
+  method: "GET" | "POST",
+  path: string,
+  body?: unknown,
+): Promise<T> {
+  const response = await fetch(`${API_URL}${path}`, {
     method,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { "Content-Type": "application/json" },
     body: body ? JSON.stringify(body) : undefined,
   });
 
-  if (!res.ok) {
-    const errText = await res.text();
-    throw new Error(errText || res.statusText);
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const message = Array.isArray(data.message)
+      ? data.message.join(", ")
+      : data.message ?? "Request failed";
+
+    throw new Error(message);
   }
 
-  return res.json();
+  return data as T;
 }
