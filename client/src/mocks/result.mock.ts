@@ -11,17 +11,17 @@ export const informedWin = {
       { ref: 5, displayName: "Omar", isHost: false },
     ],
     result: {
-      winner: "informed",
+      winner: "informed" as const,
       hiddenPlayerRef: 3,
-      secretTip: "The secret word was Coffee.",
+      secretTip: "Coffee",
       accusedRef: 3,
-      voteCounts: {
-        1: 0,
-        2: 1,
-        3: 3,
-        4: 1,
-        5: 0,
-      },
+      voteCounts: [
+        { ref: 1, votes: 0 },
+        { ref: 2, votes: 1 },
+        { ref: 3, votes: 3 },
+        { ref: 4, votes: 1 },
+        { ref: 5, votes: 0 },
+      ],
     },
   },
   me: {
@@ -40,17 +40,17 @@ export const hiddenWin = {
       { ref: 5, displayName: "Omar", isHost: false },
     ],
     result: {
-      winner: "hidden",
+      winner: "hidden" as const,
       hiddenPlayerRef: 2,
-      secretTip: "The secret place was Paris.",
+      secretTip: "Paris",
       accusedRef: 4,
-      voteCounts: {
-        1: 1,
-        2: 0,
-        3: 2,
-        4: 2,
-        5: 0,
-      },
+      voteCounts: [
+        { ref: 1, votes: 1 },
+        { ref: 2, votes: 0 },
+        { ref: 3, votes: 2 },
+        { ref: 4, votes: 2 },
+        { ref: 5, votes: 0 },
+      ],
     },
   },
   me: {
