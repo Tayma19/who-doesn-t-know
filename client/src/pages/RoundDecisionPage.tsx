@@ -1,22 +1,14 @@
-
 import { useState } from "react";
 import { submitDecision } from "../api/decision.api";
-import type {
-  PublicGameState,
-  PrivateRoleView,
-  Session,
-} from "../types";
+import type { PublicGameState, PrivateRoleView } from "../types";
 
 interface RoundDecisionPageProps {
-  state: PublicGameState & {
-    decision?: {
-      submittedCount: number;
-      totalPlayers: number;
-      lastOutcome: string | null;
-    };
-  };
+  state: PublicGameState;
   me: PrivateRoleView;
-  session: Session;
+  session: {
+    roomCode: string;
+    playerId: string;
+  };
   refresh: () => void;
 }
 
@@ -29,11 +21,8 @@ export default function RoundDecisionPage({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const submittedCount =
-    state.decision?.submittedCount ?? state.submittedCount;
-
-  const totalPlayers =
-    state.decision?.totalPlayers ?? state.players.length;
+  const submittedCount = state.decision.submittedCount;
+  const totalPlayers = state.decision.totalPlayers;
 
   const handleChoice = async (choice: "continue" | "vote") => {
     if (me.hasDecided || loading) return;
@@ -61,9 +50,9 @@ export default function RoundDecisionPage({
         Round {state.roundNumber} complete. Continue asking or vote?
       </h1>
 
-      {state.decision?.lastOutcome && (
+      {state.decision.lastOutcome && (
         <p className="mb-4 text-sm italic text-gray-600">
-          Previous outcome: {state.decision.lastOutcome}
+          Previous outcome: {state.decision.lastOutcome.result}
         </p>
       )}
 
