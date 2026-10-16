@@ -5,23 +5,15 @@ export type GameStatus =
   | "voting"
   | "finished";
 
-export type Role = "waiting" | "informed" | "hidden";
-export type DecisionChoice = "continue" | "vote";
-
-export interface Session {
-  roomCode: string;
-  playerId: string;
-  playerRef: number;
-}
-
-export interface Player {
-  publicRef: number;
+export interface PublicPlayer {
+  ref: number;
   displayName: string;
+  isHost: boolean;
 }
 
-export interface QuestionLog {
+export interface LogEntry {
   id: number;
-  roundNumber: number;
+  round: number;
   askerRef: number;
   targetRef: number;
   question: string;
@@ -29,20 +21,64 @@ export interface QuestionLog {
 }
 
 export interface PublicGameState {
+  gameId: number;
   roomCode: string;
   status: GameStatus;
   roundNumber: number;
-  players: Player[];
+  hostRef: number;
+  players: PublicPlayer[];
+  minPlayers: number;
+  playersNeeded: number;
+
+  // lobby
+  turnOrder: number[];
   currentPlayerRef: number | null;
   nextPlayerRef: number | null;
-  turnsCompleted: number;
-  turnsRemaining: number;
-  log: QuestionLog[];
-  submittedCount: number;
+  turnsCompletedInRound: number;
+  turnsRemainingInRound: number;
+
+  pendingQuestion: {
+    id: number;
+    askerRef: number;
+    targetRef: number;
+    text: string;
+  } | null;
+
+  log: LogEntry[];
+
+  decision: {
+    submittedCount: number;
+    totalPlayers: number;
+    lastOutcome: {
+      round: number;
+      continueCount: number;
+      voteCount: number;
+      result: "continue" | "vote";
+    } | null;
+  };
+
+  voting: {
+    submittedCount: number;
+    totalPlayers: number;
+    lastTie: {
+      tiedRefs: number[];
+      counts: { ref: number; votes: number }[];
+    } | null;
+    result: null | {
+      winner: "informed" | "hidden";
+      hiddenPlayerRef: number;
+      secretTip: string;
+      accusedRef: number;
+      voteCounts: { ref: number; votes: number }[];
+    };
+  };
 }
 
 export interface PrivateRoleView {
-  role: Role;
+  playerRef: number;
+  displayName: string;
+  isHost: boolean;
+  role: "waiting" | "informed" | "hidden";
   secretTip: string | null;
   hasDecided: boolean;
   hasVoted: boolean;
@@ -51,4 +87,5 @@ export interface PrivateRoleView {
 export interface ApiError {
   statusCode: number;
   message: string;
+  error: string;
 }
