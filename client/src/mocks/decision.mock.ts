@@ -2,23 +2,28 @@ export function mockDelay<T>(data: T, ms = 300): Promise<T> {
   return new Promise((resolve) => setTimeout(() => resolve(data), ms));
 }
 
-let hasChosen = false;
+// Track decisions separately for each room and player.
+const chosenPlayers = new Set<string>();
 
 /**
  * Mocks submitting a decision.
- * First call succeeds, a second call rejects with an error message.
+ * Each player can submit only one decision per room.
  */
-export function submitDecision(_choice: "continue" | "vote") {
-  if (hasChosen) {
-    return Promise.reject(new Error("You already made your choice"));
+export async function submitDecision(
+  sessionKey: string,
+  _choice: "continue" | "vote",
+) {
+  if (chosenPlayers.has(sessionKey)) {
+    throw new Error("You already made your choice");
   }
-  hasChosen = true;
+
+  chosenPlayers.add(sessionKey);
   return mockDelay({ ok: true });
 }
 
-// Reset helper for testing/previews
+// Reset helper for testing/previews.
 export function resetDecisionMock() {
-  hasChosen = false;
+  chosenPlayers.clear();
 }
 
 // --- Fixtures ---
@@ -78,7 +83,7 @@ export const decisionAfterTie = {
     decision: {
       submittedCount: 1,
       totalPlayers: 5,
-      lastOutcome: "2 Continue, 2 Vote",
+      lastOutcome: "2 Continue · 2 Vote",
     },
   },
   me: {

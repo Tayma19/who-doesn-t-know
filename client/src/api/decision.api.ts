@@ -8,10 +8,10 @@ import type { Session } from "../types";
  */
 export async function submitDecision(s: Session, choice: "continue" | "vote") {
   if (USE_MOCKS) {
-    return mock.submitDecision(choice);
+    return mock.submitDecision(`${s.roomCode}:${s.playerId}`, choice);
   }
 
-  return request<{ ok: true }>("POST", `/games/${s.roomCode}/decisions`, {
+  return request<{ ok: true }>("POST", `/api/games/${s.roomCode}/decisions`, {
     playerId: s.playerId,
     choice,
   });
