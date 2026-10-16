@@ -19,15 +19,17 @@ export async function request<T>(
     throw new Error(
       Array.isArray(data.message)
         ? data.message.join(', ')
-        : data.message ?? 'Request failed'
+        : data.message ?? 'Request failed',
     );
   }
 
   return data as T;
 }
 
-export const mockDelay = <T>(value: T, ms = 300): Promise<T> =>
-  new Promise((r) => setTimeout(() => r(value), ms));
+export const mockDelay = <T,>(value: T, ms = 300) =>
+  new Promise<T>((resolve) => setTimeout(() => resolve(value), ms));
 
-export const mockError = (message: string, ms = 300): Promise<never> =>
-  new Promise((_, rej) => setTimeout(() => rej(new Error(message)), ms));
+export const mockError = (message: string, ms = 300) =>
+  new Promise<never>((_, reject) =>
+    setTimeout(() => reject(new Error(message)), ms),
+  );
