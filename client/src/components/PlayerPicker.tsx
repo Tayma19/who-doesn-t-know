@@ -1,5 +1,5 @@
 import type { PublicPlayer } from "../types";
-import "./PlayerPicker.css";
+import "../style/PlayerPicker.css";
 
 interface PlayerPickerProps {
   players: PublicPlayer[];

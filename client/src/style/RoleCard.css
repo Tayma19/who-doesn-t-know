@@ -1,4 +1,3 @@
-
 .role-card {
   width: 100%;
   box-sizing: border-box;
@@ -6,6 +5,7 @@
   border: 1px solid transparent;
   border-radius: 16px;
   margin-bottom: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .role-card__label {
@@ -19,6 +19,7 @@
   margin: 0 0 12px;
   font-size: 1.5rem;
   line-height: 1.3;
+  color: #ffffff;
 }
 
 .role-card__message,
@@ -30,33 +31,33 @@
 }
 
 .role-card--informed {
-  color: #633c08;
-  background: #fff7df;
-  border-color: #f0d38a;
+  color: #fde047;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-color: #eab308;
 }
 
 .role-card--informed .role-card__label {
-  color: #93610c;
+  color: #facc15;
 }
 
 .role-card--hidden {
-  color: #f4efff;
-  background: #29213f;
-  border-color: #65518d;
+  color: #f3e8ff;
+  background: linear-gradient(135deg, #3b0764 0%, #2e1065 100%);
+  border-color: #a855f7;
 }
 
 .role-card--hidden .role-card__label {
-  color: #c9b4ff;
+  color: #c084fc;
 }
 
 .role-card--waiting {
-  color: #344054;
-  background: #f2f4f7;
-  border-color: #d0d5dd;
+  color: #cbd5e1;
+  background: #1e293b;
+  border-color: #475569;
 }
 
 .role-card--waiting .role-card__label {
-  color: #667085;
+  color: #94a3b8;
 }
 
 @media (max-width: 480px) {

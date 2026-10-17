@@ -1,6 +1,6 @@
 
 import type { PublicGameState } from "../types";
-import "./TurnInfo.css";
+import "../style/TurnInfo.css";
 
 interface TurnInfoProps {
   state: PublicGameState;

@@ -1,6 +1,6 @@
 
 import type { PrivateRoleView } from "../types";
-import "./RoleCard.css";
+import "../style/RoleCard.css";
 
 interface RoleCardProps {
   me: PrivateRoleView;

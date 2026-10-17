@@ -1,7 +1,7 @@
-
 import { useState } from "react";
 import GamePage from "./GamePage";
 import VotingPage from "./VotingPage";
+
 import {
   myTurn,
   askedMe,
@@ -13,6 +13,7 @@ import {
 } from "../mocks/game.mock";
 import type { GameFixture } from "../mocks/game.mock";
 import type { ScreenProps } from "../types";
+import "../style/NawarPreviewPage.css";
 
 const fixtures = {
   myTurn,
@@ -55,19 +56,19 @@ export default function NawarPreviewPage() {
   const isVoting = fixture.state.status === "voting";
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 sm:p-6">
-      <header className="mx-auto mb-6 max-w-4xl">
-        <h1 className="text-2xl font-bold text-gray-900">
+    <div className="nawar-preview-container">
+      <header className="nawar-preview-header">
+        <h1 className="nawar-preview-title">
           Nawar's Screen Preview
         </h1>
-        <p className="mt-2 text-sm text-gray-600">
+        <p className="nawar-preview-subtitle">
           Select a fixture to preview each screen state without the backend.
         </p>
       </header>
 
       <nav
         aria-label="Preview fixtures"
-        className="mx-auto mb-6 flex max-w-4xl flex-wrap gap-2"
+        className="nawar-preview-nav"
       >
         {(Object.keys(fixtures) as FixtureName[]).map((name) => (
           <button
@@ -75,18 +76,14 @@ export default function NawarPreviewPage() {
             type="button"
             onClick={() => setSelected(name)}
             aria-pressed={selected === name}
-            className={`rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
-              selected === name
-                ? "bg-purple-600 text-white"
-                : "bg-white text-gray-700 hover:bg-gray-200"
-            }`}
+            className={`fixture-btn ${selected === name ? "active" : ""}`}
           >
             {fixtureLabels[name]}
           </button>
         ))}
       </nav>
 
-      <div className="mx-auto max-w-4xl">
+      <div className="nawar-preview-content">
         {isVoting ? (
           <VotingPage {...props} />
         ) : (
