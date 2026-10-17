@@ -2,7 +2,7 @@ import { useState } from "react";
 import ResultPage from "./ResultPage";
 import { informedWin, hiddenWin } from "../mocks/result.mock";
 import type { ScreenProps } from "../types";
-import "./AlaaPreviewPage.css";
+import "../style/AlaaPreviewPage.css";
 const fixtures = {
   informedWin,
   hiddenWin,

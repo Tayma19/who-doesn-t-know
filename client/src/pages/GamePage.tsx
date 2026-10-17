@@ -4,7 +4,7 @@ import TurnInfo from "../components/TurnInfo";
 import QaLog from "../components/QaLog";
 import AskForm from "../components/AskForm";
 import AnswerForm from "../components/AnswerForm";
-import "./GamePage.css";
+import "../style/GamePage.css";
 
 export default function GamePage(props: ScreenProps) {
   const { state, me } = props;

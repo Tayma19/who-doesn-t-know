@@ -1,5 +1,5 @@
 import type { ScreenProps } from "../types";
-import "./GamePage.css";
+import "../style/GamePage.css";
 export default function ResultPage({ state }: ScreenProps) {
   const result = state.result;
 

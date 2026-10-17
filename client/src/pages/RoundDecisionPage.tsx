@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { submitDecision } from "../api/decision.api";
 import type { PublicGameState, PrivateRoleView } from "../types";
-import "./RoundDecisionPage.css";
+import "../style/RoundDecisionPage.css";
 
 interface RoundDecisionPageProps {
   state: PublicGameState;
