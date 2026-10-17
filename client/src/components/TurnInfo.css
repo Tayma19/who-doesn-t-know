@@ -1,0 +1,68 @@
+
+.turn-info {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 20px;
+  margin-bottom: 20px;
+  background: #ffffff;
+  border: 1px solid #e4e7ec;
+  border-radius: 14px;
+}
+
+.turn-info__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.turn-info__title {
+  margin: 0;
+  color: #101828;
+  font-size: 1.25rem;
+}
+
+.turn-info__status {
+  padding: 5px 10px;
+  color: #344054;
+  background: #f2f4f7;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  text-transform: capitalize;
+}
+
+.turn-info__players {
+  display: grid;
+  gap: 8px;
+}
+
+.turn-info__players p {
+  margin: 0;
+  color: #475467;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.turn-info__players strong {
+  color: #101828;
+}
+
+.turn-info__progress {
+  margin: 16px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid #eaecf0;
+  color: #667085;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 480px) {
+  .turn-info {
+    padding: 16px;
+  }
+
+  .turn-info__header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
