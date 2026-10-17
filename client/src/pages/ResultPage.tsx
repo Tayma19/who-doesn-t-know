@@ -5,10 +5,8 @@ export default function ResultPage({ state }: ScreenProps) {
 
   if (!result) {
     return (
-      <main className="mx-auto max-w-2xl p-6 text-center">
-        <h1 className="text-2xl font-bold">
-          Results aren't available yet.
-        </h1>
+      <main className="result-page">
+        <h1>Results aren't available yet.</h1>
       </main>
     );
   }
@@ -26,65 +24,54 @@ export default function ResultPage({ state }: ScreenProps) {
     .sort((a, b) => b.votes - a.votes);
 
   return (
-    <main className="mx-auto max-w-2xl p-6 font-sans">
-      <section className="mb-8 text-center">
-        <h1 className="mb-4 text-3xl font-bold">
+    <main className="result-page">
+      <section className="result-header">
+        <h1>
           {result.winner === "informed"
             ? "The informed players win!"
             : "The hidden player wins!"}
         </h1>
 
-        <p className="mb-2 text-lg">
+        <p>
           {hiddenPlayer?.displayName ?? "Unknown player"} was the hidden player
         </p>
 
-        <p className="text-gray-600">
-          The secret was: {result.secretTip}
-        </p>
+        <p>The secret was: {result.secretTip}</p>
       </section>
 
       <section>
-        <h2 className="mb-4 text-xl font-semibold">Voting results</h2>
+        <h2>Voting results</h2>
 
-        <div className="overflow-x-auto rounded-lg border border-gray-200">
-          <table className="w-full text-left">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="px-4 py-3">Player</th>
-                <th className="px-4 py-3 text-right">Votes</th>
-              </tr>
-            </thead>
+        <table className="vote-table">
+          <thead>
+            <tr>
+              <th>Player</th>
+              <th className="votes">Votes</th>
+            </tr>
+          </thead>
 
-            <tbody>
-              {playersWithVotes.map((player) => {
-                const isAccused = player.ref === result.accusedRef;
+          <tbody>
+            {playersWithVotes.map((player) => {
+              const isAccused = player.ref === result.accusedRef;
 
-                return (
-                  <tr
-                    key={player.ref}
-                    className={
-                      isAccused
-                        ? "bg-yellow-100 font-semibold"
-                        : "border-t border-gray-200"
-                    }
-                  >
-                    <td className="px-4 py-3">
-                      {player.displayName}
-                      {isAccused && (
-                        <span className="ml-2 text-sm text-yellow-800">
-                          (Accused)
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      {player.votes}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+              return (
+                <tr
+                  key={player.ref}
+                  className={isAccused ? "accused" : ""}
+                >
+                  <td>
+                    {player.displayName}
+                    {isAccused && (
+                      <span className="accused-label">(Accused)</span>
+                    )}
+                  </td>
+
+                  <td className="votes">{player.votes}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </section>
     </main>
   );
