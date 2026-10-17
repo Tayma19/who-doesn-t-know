@@ -7,6 +7,10 @@ export type MockVoteResult = {
 };
 
 const MOCK_PLAYER_REFS = [1, 2, 3, 4, 5];
+
+// Track voters by room and player, without storing whom they voted for.
+const submittedVotes = new Set<string>();
+
 type DecisionChoice = "continue" | "vote";
 
 export async function submitRoundDecision(
@@ -40,5 +44,18 @@ export async function castVote(
     return mockError("You cannot vote for yourself");
   }
 
+  const voteKey = `${session.roomCode}:${session.playerId}`;
+
+  if (submittedVotes.has(voteKey)) {
+    return mockError("You have already voted");
+  }
+
+  // Record the vote only after validation succeeds.
+  submittedVotes.add(voteKey);
+
   return mockDelay({ ok: true });
+}
+
+export function resetVotingMock() {
+  submittedVotes.clear();
 }
