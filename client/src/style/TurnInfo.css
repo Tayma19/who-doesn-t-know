@@ -1,11 +1,10 @@
-
 .turn-info {
   box-sizing: border-box;
   width: 100%;
   padding: 20px;
   margin-bottom: 20px;
-  background: #ffffff;
-  border: 1px solid #e4e7ec;
+  background: #1e293b;
+  border: 1px solid #334155;
   border-radius: 14px;
 }
 
@@ -19,16 +18,18 @@
 
 .turn-info__title {
   margin: 0;
-  color: #101828;
+  color: #f8fafc;
   font-size: 1.25rem;
 }
 
 .turn-info__status {
-  padding: 5px 10px;
-  color: #344054;
-  background: #f2f4f7;
+  padding: 5px 12px;
+  color: #c084fc;
+  background: rgba(124, 58, 237, 0.2);
+  border: 1px solid #7c3aed;
   border-radius: 999px;
   font-size: 0.8rem;
+  font-weight: 600;
   text-transform: capitalize;
 }
 
@@ -39,20 +40,20 @@
 
 .turn-info__players p {
   margin: 0;
-  color: #475467;
+  color: #cbd5e1;
   line-height: 1.5;
   overflow-wrap: anywhere;
 }
 
 .turn-info__players strong {
-  color: #101828;
+  color: #f8fafc;
 }
 
 .turn-info__progress {
   margin: 16px 0 0;
   padding-top: 12px;
-  border-top: 1px solid #eaecf0;
-  color: #667085;
+  border-top: 1px solid #334155;
+  color: #94a3b8;
   font-size: 0.9rem;
 }
 

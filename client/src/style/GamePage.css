@@ -16,7 +16,7 @@
 
 .game-page__title {
   margin: 0;
-  color: #101828;
+  color: #f8fafc;
   font-size: clamp(1.5rem, 4vw, 2rem);
   line-height: 1.25;
 }
@@ -24,17 +24,17 @@
 .game-page__room {
   flex-shrink: 0;
   margin: 4px 0 0;
-  color: #667085;
+  color: #94a3b8;
   font-size: 0.9rem;
 }
 
 .game-page__tie {
   margin-bottom: 20px;
   padding: 14px 16px;
-  border: 1px solid #f0d38a;
+  border: 1px solid #ca8a04;
   border-radius: 10px;
-  background: #fff7df;
-  color: #633c08;
+  background: rgba(234, 179, 8, 0.15);
+  color: #fde047;
   font-weight: 600;
   line-height: 1.5;
 }
@@ -46,10 +46,10 @@
 .game-page__waiting {
   margin: 0 0 20px;
   padding: 16px;
-  border: 1px solid #e4e7ec;
+  border: 1px solid #334155;
   border-radius: 12px;
-  background: #f9fafb;
-  color: #475467;
+  background: #1e293b;
+  color: #cbd5e1;
   line-height: 1.6;
   overflow-wrap: anywhere;
 }

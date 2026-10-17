@@ -1,6 +1,6 @@
 
 import type { PublicGameState } from "../types";
-import "./QaLog.css";
+import "../style/QaLog.css";
 
 interface QaLogProps {
   state: PublicGameState;

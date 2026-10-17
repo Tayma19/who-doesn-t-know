@@ -1,0 +1,103 @@
+.round-decision-card {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 440px;
+  margin: 32px auto;
+  padding: 32px 24px;
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+  text-align: center;
+  color: #f8fafc;
+  font-family: inherit;
+}
+
+.round-decision-title {
+  margin: 0 0 16px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #ffffff;
+}
+
+.round-decision-outcome {
+  margin: 0 0 16px;
+  font-size: 0.875rem;
+  font-style: italic;
+  color: #94a3b8;
+}
+
+.round-decision-status {
+  margin: 24px 0;
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: #cbd5e1;
+}
+
+.round-decision-waiting {
+  margin: 24px 0;
+  padding: 16px;
+  background-color: #0f172a;
+  border: 1px solid #7c3aed;
+  border-radius: 12px;
+  font-weight: 600;
+  color: #c084fc;
+}
+
+.round-decision-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.round-decision-btn {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  color: #ffffff;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.round-decision-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #6d28d9 0%, #5b21b6 100%);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.5);
+  transform: translateY(-1px);
+}
+
+.round-decision-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.round-decision-error {
+  margin-top: 16px;
+  padding: 12px;
+  background-color: rgba(220, 38, 38, 0.15);
+  border: 1px solid #991b1b;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #f87171;
+}
+
+@media (max-width: 480px) {
+  .round-decision-card {
+    margin: 16px auto;
+    padding: 24px 16px;
+  }
+
+  .round-decision-title {
+    font-size: 1.25rem;
+  }
+}

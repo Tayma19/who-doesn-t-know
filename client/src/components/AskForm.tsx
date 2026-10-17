@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import type { ScreenProps } from "../types";
 import { askQuestion } from "../api/game.api";
 import PlayerPicker from "./PlayerPicker";
-import "./AskForm.css";
+import "./../style/AskForm.css";
 
 export default function AskForm({ state, me, session, refresh }: ScreenProps) {
   const [targetRef, setTargetRef] = useState<number | null>(null);

@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from "react";
 import type { ScreenProps } from "../types";
 import { answerQuestion } from "../api/game.api";
-import "./AnswerForm.css";
+import "../style/AnswerForm.css";
 
 export default function AnswerForm({
   state,

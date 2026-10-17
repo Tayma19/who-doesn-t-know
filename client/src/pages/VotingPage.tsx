@@ -4,7 +4,7 @@ import { submitVote } from "../api/voting.api";
 import RoleCard from "../components/RoleCard";
 import PlayerPicker from "../components/PlayerPicker";
 import type { ScreenProps } from "../types";
-
+import "../style/VotingPage.css";
 export default function VotingPage({
   state,
   me,
