@@ -1,0 +1,63 @@
+.ask-form {
+  display: grid;
+  gap: 14px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #e4e7ec;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.ask-form__title {
+  margin: 0;
+  color: #101828;
+  font-size: 1.25rem;
+}
+
+.ask-form__label {
+  margin-bottom: -6px;
+  color: #344054;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.ask-form__textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 90px;
+  padding: 12px;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  font: inherit;
+  resize: vertical;
+}
+
+.ask-form__textarea:focus {
+  outline: 2px solid #9e77ed;
+  outline-offset: 2px;
+}
+
+.ask-form__button {
+  min-height: 44px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #6941c6;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ask-form__button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.ask-form__error {
+  margin: 0;
+  color: #b42318;
+  font-size: 0.9rem;
+}
