@@ -1,0 +1,104 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f3f4f6;
+  color: #1f2937;
+  font-family: Arial, sans-serif;
+}
+
+.preview-nav {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px;
+  background: white;
+}
+
+.preview-nav button {
+  padding: 10px 18px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.preview-nav button.active {
+  background: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+
+.result-page {
+  max-width: 720px;
+  margin: 32px auto;
+  padding: 32px;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 8%);
+}
+
+.result-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.result-header h1 {
+  margin-top: 0;
+  font-size: 30px;
+}
+
+.result-header p {
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.result-page h2 {
+  font-size: 21px;
+  margin-bottom: 16px;
+}
+
+.vote-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.vote-table th,
+.vote-table td {
+  padding: 13px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.vote-table th {
+  background: #f9fafb;
+}
+
+.vote-table .votes {
+  text-align: right;
+}
+
+.vote-table tr.accused {
+  background: #fef3c7;
+  font-weight: 600;
+}
+
+.accused-label {
+  margin-left: 8px;
+  color: #92400e;
+  font-size: 13px;
+}
+
+@media (max-width: 600px) {
+  .result-page {
+    margin: 16px;
+    padding: 20px;
+  }
+
+  .result-header h1 {
+    font-size: 24px;
+  }
+}
