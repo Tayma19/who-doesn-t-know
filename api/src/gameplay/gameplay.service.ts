@@ -9,8 +9,9 @@ import { Model, Types } from 'mongoose';
 import { Game, GameDocument } from './schemas/game.schema';
 import { Question, QuestionDocument } from './schemas/question.schema';
 import { AskQuestionDto } from './dto/ask-question.dto';
-import { advanceTurn, shouldEnterDecision } from './rules';
 import { AnswerQuestionDto } from './dto/answer-question.dto';
+import { advanceTurn, shouldEnterDecision, resolveDecision } from './rules';
+import { SubmitDecisionDto } from './dto/submit-decision.dto';
 
 @Injectable()
 export class GameplayService {
@@ -117,6 +118,52 @@ export class GameplayService {
       } else {
         game.roundNumber += 1;
       }
+    }
+
+    await game.save();
+
+    return { ok: true };
+  }
+  async submitDecision(roomCode: string, dto: SubmitDecisionDto) {
+    const game = await this.gameModel.findOne({ roomCode });
+    if (!game) {
+      throw new NotFoundException(`Game with roomCode ${roomCode} not found.`);
+    }
+    if (game.status !== 'round_decision') {
+      throw new ConflictException('Game is not in decision phase.');
+    }
+    if (!game.players.includes(dto.playerId)) {
+      throw new ConflictException('Player is not in this game.');
+    }
+    const alreadyDecided = game.currentDecisions.some(
+      (d) => d.playerId === dto.playerId,
+    );
+    if (alreadyDecided) {
+      throw new ConflictException('You have already submitted your decision.');
+    }
+
+    game.currentDecisions.push({ playerId: dto.playerId, choice: dto.choice });
+    this.logger.log(
+      `Game ${roomCode}: Player ${dto.playerId} decided to ${dto.choice}`,
+    );
+
+    if (game.currentDecisions.length === game.players.length) {
+      const choices = game.currentDecisions.map((d) => d.choice);
+
+      const outcome = resolveDecision(choices);
+      game.lastDecisionOutcome = outcome;
+
+      this.logger.log(`Game ${roomCode}: Decision outcome is ${outcome}`);
+
+      if (outcome === 'vote') {
+        game.status = 'voting';
+      } else {
+        game.status = 'questioning';
+        game.roundNumber += 1;
+        game.decisionNumber += 1;
+      }
+
+      game.currentDecisions = [];
     }
 
     await game.save();
