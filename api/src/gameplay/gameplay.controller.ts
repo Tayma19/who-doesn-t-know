@@ -3,6 +3,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GameplayService } from './gameplay.service';
 import { AskQuestionDto } from './dto/ask-question.dto';
 import { SubmitDecisionDto } from './dto/submit-decision.dto';
+import { SubmitVoteDto } from './dto/submit-vote.dto';
 
 @ApiTags('gameplay')
 @Controller('games')
@@ -24,5 +25,13 @@ export class GameplayController {
     @Body() dto: SubmitDecisionDto,
   ) {
     return this.gameplayService.submitDecision(roomCode, dto);
+  }
+
+  @ApiOperation({
+    summary: 'Submit a vote for the suspected hidden player (T6)',
+  })
+  @Post(':roomCode/votes')
+  submitVote(@Param('roomCode') roomCode: string, @Body() dto: SubmitVoteDto) {
+    return this.gameplayService.submitVote(roomCode, dto);
   }
 }

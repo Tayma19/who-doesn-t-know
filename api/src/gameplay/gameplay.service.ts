@@ -10,8 +10,15 @@ import { Game, GameDocument } from './schemas/game.schema';
 import { Question, QuestionDocument } from './schemas/question.schema';
 import { AskQuestionDto } from './dto/ask-question.dto';
 import { AnswerQuestionDto } from './dto/answer-question.dto';
-import { advanceTurn, shouldEnterDecision, resolveDecision } from './rules';
 import { SubmitDecisionDto } from './dto/submit-decision.dto';
+import {
+  advanceTurn,
+  shouldEnterDecision,
+  resolveDecision,
+  resolveVotes,
+  decideWinner,
+} from './rules';
+import { SubmitVoteDto } from './dto/submit-vote.dto';
 
 @Injectable()
 export class GameplayService {
@@ -164,6 +171,71 @@ export class GameplayService {
       }
 
       game.currentDecisions = [];
+    }
+
+    await game.save();
+
+    return { ok: true };
+  }
+  async submitVote(roomCode: string, dto: SubmitVoteDto) {
+    const game = await this.gameModel.findOne({ roomCode });
+    if (!game) {
+      throw new NotFoundException(`Game with roomCode ${roomCode} not found.`);
+    }
+
+    if (game.status !== 'voting') {
+      throw new ConflictException('Game is not in voting phase.');
+    }
+
+    if (!game.players.includes(dto.playerId)) {
+      throw new ConflictException('You are not in this game.');
+    }
+    if (!game.players.includes(dto.suspectRef)) {
+      throw new ConflictException('Suspect is not in this game.');
+    }
+
+    const alreadyVoted = game.currentVotes.some(
+      (v) => v.voterRef === dto.playerId,
+    );
+    if (alreadyVoted) {
+      throw new ConflictException('You have already voted.');
+    }
+
+    if (game.lastVoteTie && game.lastVoteTie.length > 0) {
+      if (!game.lastVoteTie.includes(dto.suspectRef)) {
+        throw new ConflictException('You can only vote for the tied players.');
+      }
+    }
+
+    game.currentVotes.push({
+      voterRef: dto.playerId,
+      suspectRef: dto.suspectRef,
+    });
+    this.logger.log(
+      `Game ${roomCode}: Player ${dto.playerId} voted for ${dto.suspectRef}`,
+    );
+
+    if (game.currentVotes.length === game.players.length) {
+      const outcome = resolveVotes(game.currentVotes);
+
+      if ('accusedRef' in outcome) {
+        const winner = decideWinner(outcome.accusedRef, game.hiddenPlayerRef);
+
+        game.status = 'finished';
+        game.accusedRef = outcome.accusedRef;
+        game.winner = winner;
+
+        this.logger.log(
+          `Game ${roomCode} finished! Accused: ${outcome.accusedRef}, Winner: ${winner}`,
+        );
+      } else if ('tiedRefs' in outcome) {
+        game.lastVoteTie = outcome.tiedRefs;
+        game.currentVotes = [];
+        game.votingNumber += 1;
+        this.logger.log(
+          `Game ${roomCode} vote tied between: ${outcome.tiedRefs.join(', ')}`,
+        );
+      }
     }
 
     await game.save();
