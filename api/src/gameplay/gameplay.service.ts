@@ -9,6 +9,8 @@ import { Model, Types } from 'mongoose';
 import { Game, GameDocument } from './schemas/game.schema';
 import { Question, QuestionDocument } from './schemas/question.schema';
 import { AskQuestionDto } from './dto/ask-question.dto';
+import { advanceTurn, shouldEnterDecision } from './rules';
+import { AnswerQuestionDto } from './dto/answer-question.dto';
 
 @Injectable()
 export class GameplayService {
@@ -63,6 +65,61 @@ export class GameplayService {
     this.logger.log(
       `Game ${roomCode}: Player ${dto.playerId} asked ${dto.targetRef}`,
     );
+
+    return { ok: true };
+  }
+
+  async answerQuestion(
+    roomCode: string,
+    questionId: string,
+    dto: AnswerQuestionDto,
+  ) {
+    const game = await this.gameModel.findOne({ roomCode });
+    if (!game) {
+      throw new NotFoundException(`Game with roomCode ${roomCode} not found.`);
+    }
+
+    const question = await this.questionModel.findById(questionId);
+    if (!question) {
+      throw new NotFoundException('Question not found.');
+    }
+
+    if (String(game.pendingQuestionId) !== String(question._id)) {
+      throw new ConflictException('This question is not pending.');
+    }
+
+    if (question.targetRef !== dto.playerId) {
+      throw new ConflictException(
+        'Only the target player can answer this question.',
+      );
+    }
+
+    question.answer = dto.text;
+    await question.save();
+
+    game.pendingQuestionId = null;
+
+    const { currentTurnIndex, turnsCompletedInRound, roundCompleted } =
+      advanceTurn(
+        game.currentTurnIndex,
+        game.turnsCompletedInRound,
+        game.players.length,
+      );
+
+    game.currentTurnIndex = currentTurnIndex;
+    game.turnsCompletedInRound = turnsCompletedInRound;
+
+    if (roundCompleted) {
+      this.logger.log(`Game ${roomCode}: Round ${game.roundNumber} completed.`);
+      if (shouldEnterDecision(game.roundNumber)) {
+        game.status = 'round_decision';
+        game.currentDecisions = [];
+      } else {
+        game.roundNumber += 1;
+      }
+    }
+
+    await game.save();
 
     return { ok: true };
   }
