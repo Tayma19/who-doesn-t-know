@@ -1,0 +1,38 @@
+.dev-page {
+  max-width: 520px;
+  margin: 32px auto;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 8%);
+}
+
+.dev-page label {
+  display: block;
+  margin: 16px 0 6px;
+  font-weight: 600;
+}
+
+.dev-page select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.dev-page__actions {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.dev-page__actions button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: #ffffff;
+  font-weight: 700;
+  cursor: pointer;
+}
