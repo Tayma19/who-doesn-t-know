@@ -18,7 +18,7 @@ export async function submitDecision(
     return mock.submitDecision(`${s.roomCode}:${s.playerId}`, choice);
   }
 
-  return request<{ ok: true }>("POST", `/api/games/${s.roomCode}/decisions`, {
+  return request<{ ok: true }>("POST", `/games/${s.roomCode}/decisions`, {
     playerId: s.playerId,
     choice,
   });

@@ -5,9 +5,9 @@ import ErrorBanner from "../components/ErrorBanner";
 import LobbyPage from "./LobbyPage";
 import GamePage from "./GamePage";
 import RoundDecisionPage from "./RoundDecisionPage";
-// import VotingPage from "./VotingPage";
 import ResultPage from "./ResultPage";
 import "../style/GameRoute.css";
+import VotingPage from "./VotingPage";
 
 function Notice({
   title,
@@ -80,9 +80,9 @@ export default function GameRoute() {
     case "round_decision":
       screen = <RoundDecisionPage {...props} />;
       break;
-    // case "voting":
-    //   screen = <VotingPage {...props} />;
-    //   break;
+     case "voting":
+       screen = <VotingPage {...props} />;
+       break;
     case "finished":
       screen = <ResultPage {...props} />;
       break;
