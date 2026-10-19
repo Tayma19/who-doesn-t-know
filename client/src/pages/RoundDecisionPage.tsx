@@ -1,24 +1,18 @@
 import { useState } from "react";
 import { submitDecision } from "../api/decision.api";
-import type { PublicGameState, PrivateRoleView } from "../types";
+
+
+
+import type { ScreenProps } from "../types"; 
 import "../style/RoundDecisionPage.css";
 
-interface RoundDecisionPageProps {
-  state: PublicGameState;
-  me: PrivateRoleView;
-  session: {
-    roomCode: string;
-    playerId: string;
-  };
-  refresh: () => void;
-}
 
 export default function RoundDecisionPage({
   state,
   me,
   session,
   refresh,
-}: RoundDecisionPageProps) {
+}: ScreenProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -53,7 +47,7 @@ export default function RoundDecisionPage({
 
       {state.decision.lastOutcome && (
         <p className="round-decision-outcome">
-          Previous outcome: {state.decision.lastOutcome.result}
+         Last time: {state.decision.lastOutcome.continueCount} Continue · {state.decision.lastOutcome.voteCount} Vote
         </p>
       )}
 

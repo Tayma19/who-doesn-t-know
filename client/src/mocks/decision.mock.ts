@@ -83,7 +83,12 @@ export const decisionAfterTie = {
     decision: {
       submittedCount: 1,
       totalPlayers: 5,
-      lastOutcome: "2 Continue · 2 Vote",
+        lastOutcome: {
+    round: 2,
+    continueCount: 2,
+    voteCount: 2,
+    result: "continue" as const,
+  },
     },
   },
   me: {
