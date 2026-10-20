@@ -1,0 +1,14 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsString } from 'class-validator';
+
+export class SubmitVoteDto {
+  @ApiProperty({ example: 'p_test1' })
+  @IsString()
+  @IsNotEmpty()
+  playerId: string;
+
+  @ApiProperty({ example: 'p_test4' })
+  @IsString()
+  @IsNotEmpty()
+  suspectRef: string;
+}
