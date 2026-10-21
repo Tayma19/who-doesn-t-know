@@ -25,7 +25,7 @@ export default function ResultPage({ state }: ScreenProps) {
     .sort((a, b) => b.votes - a.votes);
 
   return (
-    <main className="result-page">
+    <main className="result-page" data-winner={result.winner}>
       <section className="result-header">
         <h1>
           {result.winner === "informed"

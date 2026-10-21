@@ -98,7 +98,7 @@ export default function GameRoute() {
 
   return (
     <>
-      {/* A failed poll keeps the last good screen and shows a message above it. */}
+
       {error && (
         <div className="route-error">
           <ErrorBanner message={`Connection problem: ${error.message}`} />

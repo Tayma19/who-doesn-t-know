@@ -2,13 +2,10 @@ export function mockDelay<T>(data: T, ms = 300): Promise<T> {
   return new Promise((resolve) => setTimeout(() => resolve(data), ms));
 }
 
-// Track decisions separately for each room and player.
+
 const chosenPlayers = new Set<string>();
 
-/**
- * Mocks submitting a decision.
- * Each player can submit only one decision per room.
- */
+
 export async function submitDecision(
   sessionKey: string,
   _choice: "continue" | "vote",
@@ -21,12 +18,12 @@ export async function submitDecision(
   return mockDelay({ ok: true });
 }
 
-// Reset helper for testing/previews.
+
 export function resetDecisionMock() {
   chosenPlayers.clear();
 }
 
-// --- Fixtures ---
+
 
 export const decisionOpen = {
   state: {

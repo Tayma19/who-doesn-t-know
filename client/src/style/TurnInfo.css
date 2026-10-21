@@ -1,69 +1,43 @@
 .turn-info {
-  box-sizing: border-box;
-  width: 100%;
-  padding: 20px;
-  margin-bottom: 20px;
-  background: #1e293b;
-  border: 1px solid #334155;
-  border-radius: 14px;
+  display: grid;
+  gap: 0.6rem;
+  padding: 1rem 1.2rem 1.1rem;
+  background: var(--ink);
+  color: #fff;
+  box-shadow: var(--lift);
 }
 
 .turn-info__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: 1rem;
 }
 
 .turn-info__title {
-  margin: 0;
-  color: #f8fafc;
-  font-size: 1.25rem;
+  color: var(--note);
+  font-size: 2.1rem;
 }
 
 .turn-info__status {
-  padding: 5px 12px;
-  color: #c084fc;
-  background: rgba(124, 58, 237, 0.2);
-  border: 1px solid #7c3aed;
+  padding: 0.1rem 0.75rem;
   border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-transform: capitalize;
+  background: var(--mint);
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 700;
 }
 
 .turn-info__players {
   display: grid;
-  gap: 8px;
+  gap: 0.15rem;
 }
 
 .turn-info__players p {
   margin: 0;
-  color: #cbd5e1;
-  line-height: 1.5;
-  overflow-wrap: anywhere;
-}
-
-.turn-info__players strong {
-  color: #f8fafc;
 }
 
 .turn-info__progress {
-  margin: 16px 0 0;
-  padding-top: 12px;
-  border-top: 1px solid #334155;
-  color: #94a3b8;
-  font-size: 0.9rem;
-}
-
-@media (max-width: 480px) {
-  .turn-info {
-    padding: 16px;
-  }
-
-  .turn-info__header {
-    align-items: flex-start;
-    flex-direction: column;
-  }
+  color: #c3c5ff;
+  font-weight: 600;
 }

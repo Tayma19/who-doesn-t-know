@@ -1,69 +1,29 @@
-/* src/style/DevPage.css */
-
 .dev-page {
-  max-width: 520px;
-  margin: 32px auto;
-  padding: 24px;
-  background: #ffffff;
-  border-radius: 14px;
-  box-shadow: 0 4px 16px rgb(0 0 0 / 8%);
-  font-family: inherit;
-  color: #1f2937;
+  width: min(100% - 2rem, 40rem);
+  margin: 2rem auto;
+  padding: 1.6rem 1.4rem;
+  display: grid;
+  gap: 0.9rem;
 }
 
 .dev-page h1 {
-  margin-top: 0;
-  font-size: 24px;
-  font-weight: 700;
-  color: #111827;
-}
-
-.dev-page p {
-  line-height: 1.5;
-  color: #4b5563;
+  font-size: 2rem;
 }
 
 .dev-page label {
-  display: block;
-  margin: 16px 0 6px;
+  display: grid;
+  gap: 0.3rem;
   font-weight: 600;
-  color: #374151;
 }
 
-.dev-page select {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font-size: 16px;
-  background-color: #f9fafb;
+.dev-page code {
+  padding: 0.05rem 0.35rem;
+  background: var(--paper-tint);
+  border-radius: 4px;
 }
 
 .dev-page__actions {
   display: flex;
-  gap: 10px;
-  margin: 20px 0;
-}
-
-.dev-page__actions button {
-  padding: 10px 16px;
-  border: none;
-  border-radius: 8px;
-  background: #2563eb;
-  color: #ffffff;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.dev-page__actions button:hover {
-  background: #1d4ed8;
-}
-
-.dev-page code {
-  background: #f3f4f6;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 14px;
-  color: #c026d3;
+  flex-wrap: wrap;
+  gap: 0.6rem;
 }

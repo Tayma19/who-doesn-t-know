@@ -70,6 +70,13 @@ export default function HomePage() {
       <header className="home-page__header">
         <h1>Who Doesn't Know?</h1>
         <p>Everyone knows the secret — except one player. Find who is pretending.</p>
+        <div className="home-page__notes" aria-hidden="true">
+          <span>Airport</span>
+          <span>Airport</span>
+          <span>Airport</span>
+          <span>Airport</span>
+          <span className="home-page__note--blank">?</span>
+        </div>
       </header>
 
       <div className="home-page__cards">

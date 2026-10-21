@@ -6,10 +6,7 @@ type DecisionSession = {
   playerId: string;
 };
 
-/**
- * Submits a player's decision ('continue' or 'vote') for the current round.
- * Uses mock data if USE_MOCKS is true, otherwise sends a POST request to the backend.
- */
+
 export async function submitDecision(
   s: DecisionSession,
   choice: "continue" | "vote"
