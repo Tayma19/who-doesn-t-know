@@ -1,8 +1,14 @@
-import { ConflictException, Injectable, Logger } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CounterService } from '../counters/counters.service';
 import { CreateGameDto } from './dto/create-game.dto';
+import { JoinGameDto } from './dto/join-game.dto';
 import { Game, GameDocument } from './schemas/game.schema';
 import { Player, PlayerDocument } from './schemas/player.schema';
 import { generatePlayerId, generateRoomCode } from './utils/codes';
@@ -11,6 +17,7 @@ import { generatePlayerId, generateRoomCode } from './utils/codes';
 export class GamesService {
   private readonly logger = new Logger(GamesService.name);
   private static readonly ROOM_CODE_ATTEMPTS = 10;
+  private static readonly MAX_PLAYERS = 10;
 
   constructor(
     @InjectModel(Game.name)
@@ -55,6 +62,57 @@ export class GamesService {
     return {
       gameId,
       roomCode,
+      playerId,
+      playerRef,
+    };
+  }
+
+  async joinGame(joinGameDto: JoinGameDto) {
+    const roomCode = joinGameDto.roomCode.trim().toUpperCase();
+    const displayName = joinGameDto.displayName.trim();
+    const normalizedName = displayName.toLowerCase();
+    const game = await this.gameModel.findOne({ roomCode });
+
+    if (!game) {
+      throw new NotFoundException('Game not found');
+    }
+
+    if (game.status !== 'lobby') {
+      throw new ConflictException('Game is no longer accepting players');
+    }
+
+    const playerCount = await this.playerModel.countDocuments({
+      gameId: game.id,
+    });
+
+    if (playerCount >= GamesService.MAX_PLAYERS) {
+      throw new ConflictException('Game is full');
+    }
+
+    const existingPlayer = await this.playerModel.exists({
+      gameId: game.id,
+      normalizedName,
+    });
+
+    if (existingPlayer) {
+      throw new ConflictException('Display name is already used in this game');
+    }
+
+    const playerRef = await this.counterService.next('players');
+    const playerId = generatePlayerId();
+
+    await this.playerModel.create({
+      id: playerRef,
+      gameId: game.id,
+      displayName,
+      normalizedName,
+      tempId: playerId,
+      isHost: false,
+    });
+
+    return {
+      gameId: game.id,
+      roomCode: game.roomCode,
       playerId,
       playerRef,
     };

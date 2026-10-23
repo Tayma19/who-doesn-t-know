@@ -1,6 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateGameDto } from './dto/create-game.dto';
+import { JoinGameDto } from './dto/join-game.dto';
 import { GamesService } from './games.service';
 
 @ApiTags('games')
@@ -15,5 +16,14 @@ export class GamesController {
   })
   createGame(@Body() createGameDto: CreateGameDto) {
     return this.gamesService.createGame(createGameDto);
+  }
+
+  @Post('join')
+  @ApiOperation({ summary: 'Join a game in the lobby' })
+  @ApiCreatedResponse({
+    description: 'Player joined the game successfully',
+  })
+  joinGame(@Body() joinGameDto: JoinGameDto) {
+    return this.gamesService.joinGame(joinGameDto);
   }
 }
