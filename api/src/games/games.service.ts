@@ -1,3 +1,4 @@
+
 import {
   BadRequestException,
   ConflictException,
@@ -13,23 +14,27 @@ import { CreateGameDto } from './dto/create-game.dto';
 import { JoinGameDto } from './dto/join-game.dto';
 import { PlayerActionDto } from './dto/player-action.dto';
 import { PrivateRoleQueryDto } from './dto/private-role-query.dto';
-import { Game, GameDocument } from './schemas/game.schema';
-import { Player, PlayerDocument } from './schemas/player.schema';
 import { StateBuilder } from './state.builder';
 import { Tip, TipDocument } from '../tips/schemas/tip.schema';
+import { Game, GameDocument } from './schemas/game.schema';
+import { Player, PlayerDocument } from './schemas/player.schema';
+
 import { generatePlayerId, generateRoomCode } from './utils/codes';
 
 @Injectable()
 export class GamesService {
   private readonly logger = new Logger(GamesService.name);
   private static readonly ROOM_CODE_ATTEMPTS = 10;
+
   private static readonly MAX_PLAYERS = 10;
+
 
   constructor(
     @InjectModel(Game.name)
     private readonly gameModel: Model<GameDocument>,
     @InjectModel(Player.name)
     private readonly playerModel: Model<PlayerDocument>,
+
     @InjectModel(Tip.name)
     private readonly tipModel: Model<TipDocument>,
     private readonly counterService: CounterService,
@@ -291,6 +296,7 @@ export class GamesService {
 
     return shuffled;
   }
+
 
   private async reserveRoomCode(): Promise<string> {
     for (

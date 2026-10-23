@@ -7,7 +7,9 @@ import { Game, GameSchema } from './schemas/game.schema';
 import { Player, PlayerSchema } from './schemas/player.schema';
 import { GamesController } from './games.controller';
 import { GamesService } from './games.service';
+
 import { StateBuilder } from './state.builder';
+
 
 @Module({
   imports: [
@@ -15,10 +17,12 @@ import { StateBuilder } from './state.builder';
       { name: Game.name, schema: GameSchema },
       { name: Player.name, schema: PlayerSchema },
       { name: Tip.name, schema: TipSchema },
+
     ]),
     CounterModule,
   ],
   controllers: [GamesController],
+
   providers: [GamesService, StateBuilder, GameplayReadStub],
   exports: [GamesService],
 })
