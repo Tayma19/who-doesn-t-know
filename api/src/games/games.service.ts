@@ -1,16 +1,20 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { randomInt } from 'node:crypto';
 import { Model } from 'mongoose';
 import { CounterService } from '../counters/counters.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { JoinGameDto } from './dto/join-game.dto';
+import { PlayerActionDto } from './dto/player-action.dto';
 import { Game, GameDocument } from './schemas/game.schema';
 import { Player, PlayerDocument } from './schemas/player.schema';
+import { Tip, TipDocument } from '../tips/schemas/tip.schema';
 import { generatePlayerId, generateRoomCode } from './utils/codes';
 
 @Injectable()
@@ -24,6 +28,8 @@ export class GamesService {
     private readonly gameModel: Model<GameDocument>,
     @InjectModel(Player.name)
     private readonly playerModel: Model<PlayerDocument>,
+    @InjectModel(Tip.name)
+    private readonly tipModel: Model<TipDocument>,
     private readonly counterService: CounterService,
   ) {}
 
@@ -116,6 +122,98 @@ export class GamesService {
       playerId,
       playerRef,
     };
+  }
+
+  async startGame(roomCode: string, playerActionDto: PlayerActionDto) {
+    const normalizedRoomCode = roomCode.trim().toUpperCase();
+    const game = await this.gameModel.findOne({ roomCode: normalizedRoomCode });
+
+    if (!game) {
+      throw new NotFoundException('Game not found');
+    }
+
+    if (game.status !== 'lobby') {
+      throw new ConflictException('Game has already started');
+    }
+
+    const player = await this.playerModel.findOne({
+      gameId: game.id,
+      tempId: playerActionDto.playerId,
+    });
+
+    if (!player) {
+      throw new NotFoundException('Player not found in this game');
+    }
+
+    if (!player.isHost) {
+      throw new ConflictException('Only the host can start the game');
+    }
+
+    const players = await this.playerModel
+      .find({ gameId: game.id })
+      .sort({ id: 1 })
+      .lean();
+
+    const playersNeeded = 4 - players.length;
+
+    if (playersNeeded > 0) {
+      throw new BadRequestException(`${playersNeeded} more players needed`);
+    }
+
+    const activeTips = await this.tipModel.find({ active: true }).lean();
+
+    if (activeTips.length === 0) {
+      throw new BadRequestException('No active tip available');
+    }
+
+    const hiddenPlayer = players[randomInt(players.length)];
+    const secretTip = activeTips[randomInt(activeTips.length)];
+    const turnOrder = this.shuffle(players.map(({ id }) => id));
+
+    const startedGame = await this.gameModel.findOneAndUpdate(
+      { id: game.id, status: 'lobby' },
+      {
+        $set: {
+          status: 'questioning',
+          roundNumber: 1,
+          hiddenPlayerRef: hiddenPlayer.id,
+          secretTipId: secretTip.id,
+          turnOrder,
+          currentTurnIndex: 0,
+          turnsCompletedInRound: 0,
+          decisionNumber: 1,
+          votingNumber: 1,
+        },
+      },
+      { new: true },
+    );
+
+    if (!startedGame) {
+      throw new ConflictException('Game has already started');
+    }
+
+    this.logger.log(`Game started with ${players.length} players`);
+
+    return {
+      gameId: startedGame.id,
+      roomCode: startedGame.roomCode,
+      status: startedGame.status,
+      playerCount: players.length,
+    };
+  }
+
+  private shuffle<T>(items: T[]): T[] {
+    const shuffled = [...items];
+
+    for (let index = shuffled.length - 1; index > 0; index -= 1) {
+      const randomIndex = randomInt(index + 1);
+      [shuffled[index], shuffled[randomIndex]] = [
+        shuffled[randomIndex],
+        shuffled[index],
+      ];
+    }
+
+    return shuffled;
   }
 
   private async reserveRoomCode(): Promise<string> {
