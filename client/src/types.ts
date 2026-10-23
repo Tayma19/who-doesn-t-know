@@ -1,7 +1,3 @@
-
-
-
-
 export interface Session {
   roomCode: string;
   playerId: string;
@@ -9,20 +5,20 @@ export interface Session {
 }
 
 export interface ScreenProps {
-  state: PublicGameState; 
-  me: PrivateRoleView;    
-  session: Session;       
-  refresh: () => void;    
+  state: PublicGameState;
+  me: PrivateRoleView;
+  session: Session;
+  refresh: () => void;
 }
 
 // ---------- Contract (from the backend) ----------
 
 export type GameStatus =
-  | 'lobby'
-  | 'questioning'
-  | 'round_decision'
-  | 'voting'
-  | 'finished';
+  | "lobby"
+  | "questioning"
+  | "round_decision"
+  | "voting"
+  | "finished";
 
 export interface PublicPlayer {
   ref: number;
@@ -75,7 +71,7 @@ export interface PublicGameState {
       round: number;
       continueCount: number;
       voteCount: number;
-      result: 'continue' | 'vote';
+      result: "continue" | "vote";
     } | null;
   };
 
@@ -91,7 +87,7 @@ export interface PublicGameState {
 
   // only when finished
   result: null | {
-    winner: 'informed' | 'hidden';
+    winner: "informed" | "hidden";
     hiddenPlayerRef: number;
     secretTip: string;
     accusedRef: number;
@@ -103,10 +99,10 @@ export interface PrivateRoleView {
   playerRef: number;
   displayName: string;
   isHost: boolean;
-  role: 'waiting' | 'informed' | 'hidden'; 
-  secretTip: string | null;                
-  hasDecided: boolean;                     
-  hasVoted: boolean;                     
+  role: "waiting" | "informed" | "hidden";
+  secretTip: string | null;
+  hasDecided: boolean;
+  hasVoted: boolean;
 }
 
 export interface ApiError {

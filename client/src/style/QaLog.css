@@ -1,0 +1,53 @@
+.qa-log {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 14px;
+  padding: 20px;
+  margin-top: 24px;
+}
+
+.qa-log__title {
+  margin: 0 0 16px;
+  font-size: 1.2rem;
+  color: #f8fafc;
+}
+
+.qa-log__empty {
+  color: #94a3b8;
+  font-style: italic;
+  margin: 0;
+}
+
+.qa-log__round {
+  margin-bottom: 18px;
+}
+
+.qa-log__round-title {
+  font-size: 0.95rem;
+  color: #c084fc;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 10px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #334155;
+}
+
+.qa-log__entry {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+}
+
+.qa-log__question {
+  margin: 0 0 4px;
+  font-size: 0.95rem;
+  color: #f1f5f9;
+}
+
+.qa-log__answer {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #cbd5e1;
+}

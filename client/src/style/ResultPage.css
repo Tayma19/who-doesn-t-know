@@ -1,0 +1,84 @@
+.result-page {
+  max-width: 720px;
+  margin: 32px auto;
+  padding: 32px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  color: #f8fafc;
+  font-family: inherit;
+}
+
+.result-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.result-header h1 {
+  margin-top: 0;
+  font-size: 30px;
+  color: #f8fafc;
+}
+
+.result-header p {
+  font-size: 17px;
+  line-height: 1.6;
+  color: #cbd5e1;
+}
+
+.result-page h2 {
+  font-size: 21px;
+  margin-bottom: 16px;
+  color: #f8fafc;
+}
+
+.vote-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #0f172a;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #334155;
+}
+
+.vote-table th,
+.vote-table td {
+  padding: 13px 16px;
+  text-align: left;
+  border-bottom: 1px solid #334155;
+  color: #e2e8f0;
+}
+
+.vote-table th {
+  background: #1e293b;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.vote-table .votes {
+  text-align: right;
+}
+
+.vote-table tr.accused {
+  background: rgba(220, 38, 38, 0.2);
+  font-weight: 600;
+}
+
+.accused-label {
+  margin-left: 8px;
+  color: #f87171;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+@media (max-width: 600px) {
+  .result-page {
+    margin: 16px;
+    padding: 20px;
+  }
+
+  .result-header h1 {
+    font-size: 24px;
+  }
+}
