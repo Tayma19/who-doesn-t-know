@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CounterModule } from './counters/counters.module';
 import { TipsModule } from './tips/tips.module';
+import { GamesModule } from './games/games.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -12,7 +13,7 @@ import { TipsModule } from './tips/tips.module';
         uri: config.get<string>('MONGODB_URI'),
       }),
     }),
-    CounterModule,TipsModule,
+    CounterModule,TipsModule,GamesModule,
   ],
   controllers: [],
   providers: [],

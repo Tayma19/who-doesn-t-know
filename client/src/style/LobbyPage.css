@@ -1,3 +1,4 @@
+
 .lobby-page {
   width: var(--page);
   margin: 0 auto;
@@ -31,6 +32,10 @@
   box-shadow: var(--lift);
   transform: rotate(-1.5deg);
 }
+@keyframes code-flow {
+  to { background-position: 400% 0; }
+}
+
 
 .lobby-page__players {
   padding: 1.3rem 1.3rem 1rem;
@@ -94,6 +99,7 @@
   font-weight: 700;
 }
 
+
 .lobby-page__needed {
   justify-self: start;
   padding: 0.55rem 0.9rem;
@@ -103,6 +109,7 @@
   box-shadow: 3px 3px 0 var(--desk-shade);
   transform: rotate(0.8deg);
 }
+
 
 .lobby-page__start {
   width: 100%;
