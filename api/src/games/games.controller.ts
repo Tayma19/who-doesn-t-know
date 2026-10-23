@@ -1,8 +1,15 @@
-import { Body, Controller, Param, Post } from '@nestjs/common';
-import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiQuery,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CreateGameDto } from './dto/create-game.dto';
 import { JoinGameDto } from './dto/join-game.dto';
 import { PlayerActionDto } from './dto/player-action.dto';
+import { PrivateRoleQueryDto } from './dto/private-role-query.dto';
 import { GamesService } from './games.service';
 
 @ApiTags('games')
@@ -38,5 +45,26 @@ export class GamesController {
     @Body() playerActionDto: PlayerActionDto,
   ) {
     return this.gamesService.startGame(roomCode, playerActionDto);
+  }
+
+  @Get(':roomCode/me')
+  @ApiOperation({ summary: 'Get the private role view for a player' })
+  @ApiQuery({
+    name: 'playerId',
+    required: true,
+    description: 'Private player ID requesting the role view',
+  })
+  getPrivateRoleView(
+    @Param('roomCode') roomCode: string,
+    @Query() privateRoleQueryDto: PrivateRoleQueryDto,
+  ) {
+    return this.gamesService.getPrivateRoleView(roomCode, privateRoleQueryDto);
+  }
+
+  @Get(':roomCode/state')
+  @ApiOperation({ summary: 'Get the public state of a game' })
+  @ApiOkResponse({ description: 'Public game state returned successfully' })
+  getPublicState(@Param('roomCode') roomCode: string) {
+    return this.gamesService.getPublicState(roomCode);
   }
 }

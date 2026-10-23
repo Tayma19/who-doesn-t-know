@@ -12,8 +12,10 @@ import { CounterService } from '../counters/counters.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { JoinGameDto } from './dto/join-game.dto';
 import { PlayerActionDto } from './dto/player-action.dto';
+import { PrivateRoleQueryDto } from './dto/private-role-query.dto';
 import { Game, GameDocument } from './schemas/game.schema';
 import { Player, PlayerDocument } from './schemas/player.schema';
+import { StateBuilder } from './state.builder';
 import { Tip, TipDocument } from '../tips/schemas/tip.schema';
 import { generatePlayerId, generateRoomCode } from './utils/codes';
 
@@ -31,6 +33,7 @@ export class GamesService {
     @InjectModel(Tip.name)
     private readonly tipModel: Model<TipDocument>,
     private readonly counterService: CounterService,
+    private readonly stateBuilder: StateBuilder,
   ) {}
 
   async createGame(createGameDto: CreateGameDto) {
@@ -200,6 +203,79 @@ export class GamesService {
       status: startedGame.status,
       playerCount: players.length,
     };
+  }
+
+  async getPrivateRoleView(
+    roomCode: string,
+    privateRoleQueryDto: PrivateRoleQueryDto,
+  ) {
+    const normalizedRoomCode = roomCode.trim().toUpperCase();
+    const game = await this.gameModel.findOne({ roomCode: normalizedRoomCode });
+
+    if (!game) {
+      throw new NotFoundException('Game not found');
+    }
+
+    const player = await this.playerModel.findOne({
+      gameId: game.id,
+      tempId: privateRoleQueryDto.playerId,
+    });
+
+    if (!player) {
+      throw new NotFoundException('Player not found in this game');
+    }
+
+    const actionFlags = {
+      hasDecided: false,
+      hasVoted: false,
+    };
+
+    if (game.status === 'lobby') {
+      return {
+        role: 'waiting',
+        secretTip: null,
+        ...actionFlags,
+      };
+    }
+
+    const isHiddenPlayer = game.hiddenPlayerRef === player.id;
+
+    if (isHiddenPlayer) {
+      return {
+        role: 'hidden',
+        secretTip: null,
+        ...actionFlags,
+      };
+    }
+
+    if (!game.secretTipId) {
+      throw new NotFoundException('Secret tip not found for this game');
+    }
+
+    const secretTip = await this.tipModel
+      .findOne({ id: game.secretTipId })
+      .lean();
+
+    if (!secretTip) {
+      throw new NotFoundException('Secret tip not found for this game');
+    }
+
+    return {
+      role: 'informed',
+      secretTip: secretTip.text,
+      ...actionFlags,
+    };
+  }
+
+  async getPublicState(roomCode: string) {
+    const normalizedRoomCode = roomCode.trim().toUpperCase();
+    const game = await this.gameModel.findOne({ roomCode: normalizedRoomCode });
+
+    if (!game) {
+      throw new NotFoundException('Game not found');
+    }
+
+    return this.stateBuilder.build(game);
   }
 
   private shuffle<T>(items: T[]): T[] {
