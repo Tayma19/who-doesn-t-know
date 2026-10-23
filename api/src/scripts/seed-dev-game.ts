@@ -1,9 +1,9 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from '../src/app.module';
 import { getModelToken } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { GameDocument } from '../src/gameplay/schemas/question.schema.ts';
 import { Logger } from '@nestjs/common';
+import { AppModule } from '../app.module.js';
 
 async function bootstrap() {
   const logger = new Logger('SeedDevGame');
