@@ -26,10 +26,10 @@ export function askQuestion(
 export function answerQuestion(
   session: Session,
   questionId: number,
-  text: string,
+  answer: string,
 ): Promise<{ ok: true }> {
   if (USE_MOCKS) {
-    return mock.answerQuestion(text);
+    return mock.answerQuestion(answer);
   }
 
   return request<{ ok: true }>(
@@ -37,7 +37,7 @@ export function answerQuestion(
     `/games/${session.roomCode}/questions/${questionId}/answer`,
     {
       playerId: session.playerId,
-      text,
+      answer,
     },
   );
 }
