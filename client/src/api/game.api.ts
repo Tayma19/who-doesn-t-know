@@ -37,7 +37,7 @@ export function answerQuestion(
     `/games/${session.roomCode}/questions/${questionId}/answer`,
     {
       playerId: session.playerId,
-      answer,
+       text: answer,
     },
   );
 }
