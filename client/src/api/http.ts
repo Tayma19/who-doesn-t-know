@@ -1,5 +1,5 @@
 const API_URL = "http://localhost:3000";
-export const USE_MOCKS = true;
+export const USE_MOCKS = false;
 
 
 export async function request<T>(
