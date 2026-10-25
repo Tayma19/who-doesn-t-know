@@ -15,7 +15,7 @@ export interface MockJoinResult {
 
 export function createGame(displayName: string): Promise<MockJoinResult> {
   if (!displayName.trim()) return mockError("Display name is required");
-  // Start every new mock game from the small lobby fixture.
+
   setSelectedStateName("lobby2Players");
   return mockDelay({
     gameId: 1,
@@ -54,7 +54,7 @@ export function startGame(session: Session): Promise<{ ok: true }> {
       `${needed} more player${needed === 1 ? "" : "s"} needed`,
     );
   }
-  // Move the mock game forward so the whole flow can be previewed.
+
   setSelectedStateName("questioningState");
   return mockDelay({ ok: true });
 }

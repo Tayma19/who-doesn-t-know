@@ -7,7 +7,7 @@ import type {
 } from "../types";
 import { mockDelay } from "../api/http";
 
-// ---------- helpers ----------
+
 
 const ALL_PLAYERS: PublicPlayer[] = [
   { ref: 1, displayName: "Taima", isHost: true },
@@ -57,7 +57,7 @@ function base(overrides: Partial<PublicGameState>): PublicGameState {
   };
 }
 
-// ---------- state fixtures ----------
+
 
 export const lobby2Players: PublicGameState = base({
   players: ALL_PLAYERS.slice(0, 2),
@@ -116,7 +116,7 @@ export const finishedState: PublicGameState = base({
   },
 });
 
-// ---------- private ("me") fixtures ----------
+
 
 const meBase: PrivateRoleView = {
   playerRef: 1,
@@ -128,14 +128,14 @@ const meBase: PrivateRoleView = {
   hasVoted: false,
 };
 
-/** Host waiting in the lobby (no role yet). */
+
 export const meHost: PrivateRoleView = {
   ...meBase,
   role: "waiting",
   secretTip: null,
 };
 
-/** A non-host player waiting in the lobby. */
+
 export const meWaiting: PrivateRoleView = {
   ...meBase,
   playerRef: 2,
@@ -145,10 +145,10 @@ export const meWaiting: PrivateRoleView = {
   secretTip: null,
 };
 
-/** An informed player: sees the secret tip. */
+
 export const meInformed: PrivateRoleView = { ...meBase };
 
-/** The hidden player: no tip. */
+
 export const meHidden: PrivateRoleView = {
   ...meBase,
   playerRef: 4,
@@ -158,7 +158,7 @@ export const meHidden: PrivateRoleView = {
   secretTip: null,
 };
 
-// ---------- registries (used by /dev and the mock api) ----------
+
 
 export const stateFixtures = {
   lobby2Players,
@@ -191,19 +191,14 @@ export function setSelectedStateName(name: StateFixtureName): void {
   localStorage.setItem("mockState", name);
 }
 
-// ---------- mock api ----------
 
-/** Returns the fixture chosen by localStorage.mockState (default lobby2Players). */
 export function getState(roomCode: string): Promise<PublicGameState> {
   const fixture = stateFixtures[getSelectedStateName()];
   return mockDelay({ ...fixture, roomCode: roomCode.toUpperCase() }, 100);
 }
 
-/**
- * Returns the fixture chosen by localStorage.mockMe if set.
- * Otherwise: in the lobby the host (ref 1) sees meHost and others meWaiting;
- * after the lobby everybody sees meInformed.
- */
+
+
 export function getMe(session: Session): Promise<PrivateRoleView> {
   const forced = readStorage("mockMe");
   if (forced && forced in meFixtures) {

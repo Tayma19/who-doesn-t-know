@@ -82,7 +82,8 @@ export default function DevPage() {
       </div>
 
       <p>
-        <Link to="/dev/result">Result preview (Alaa)</Link> ·{" "}
+        <Link to="/dev/game">Game &amp; voting previews (Nawar)</Link> ·{" "}
+        <Link to="/dev/result">Decision &amp; result previews (Alaa)</Link> ·{" "}
         <Link to="/">Home</Link>
       </p>
     </main>

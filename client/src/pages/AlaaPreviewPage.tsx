@@ -1,86 +1,70 @@
 import { useState } from "react";
 import ResultPage from "./ResultPage";
+import RoundDecisionPage from "./RoundDecisionPage";
+import {
+  decisionOpen,
+  decisionChosen,
+  decisionAfterTie,
+  resetDecisionMock,
+} from "../mocks/decision.mock";
 import { informedWin, hiddenWin } from "../mocks/result.mock";
-import type { ScreenProps } from "../types";
+import { decisionState, finishedState, meInformed } from "../mocks/state.mock";
+import type { PublicGameState, ScreenProps } from "../types";
 import "../style/AlaaPreviewPage.css";
-const fixtures = {
-  informedWin,
-  hiddenWin,
+
+const decisionFixtures = { decisionOpen, decisionChosen, decisionAfterTie };
+const resultFixtures = { informedWin, hiddenWin };
+
+const labels = {
+  decisionOpen: "Decision (open)",
+  decisionChosen: "Decision (I chose)",
+  decisionAfterTie: "Decision (after tie)",
+  informedWin: "Informed win",
+  hiddenWin: "Hidden win",
 };
 
-type FixtureName = keyof typeof fixtures;
+type FixtureName = keyof typeof labels;
 
 export default function AlaaPreviewPage() {
-  const [selected, setSelected] =
-    useState<FixtureName>("informedWin");
+  const [selected, setSelected] = useState<FixtureName>("decisionOpen");
 
-  const fixture = fixtures[selected];
+  const isResult = selected === "informedWin" || selected === "hiddenWin";
+  const fixture = isResult
+    ? resultFixtures[selected as keyof typeof resultFixtures]
+    : decisionFixtures[selected as keyof typeof decisionFixtures];
 
-  const props = {
-    state: {
-      ...fixture.state,
-      gameId: 1,
-      roomCode: "TEST",
-      status: "finished" as const,
-      hostRef: 1,
-      minPlayers: 3,
-      playersNeeded: 0,
-      turnOrder: [],
-      currentPlayerRef: null,
-      nextPlayerRef: null,
-      turnsCompletedInRound: 0,
-      turnsRemainingInRound: 0,
-      pendingQuestion: null,
-      log: [],
-      decision: {
-        submittedCount: 5,
-        totalPlayers: 5,
-        lastOutcome: null,
-      },
-      voting: {
-        submittedCount: 5,
-        totalPlayers: 5,
-        lastTie: null,
-      },
-    },
-    me: {
-      playerRef: 1,
-      displayName: "Alaa",
-      isHost: true,
-      role: "informed" as const,
-      secretTip: null,
-      hasDecided: fixture.me.hasDecided,
-      hasVoted: true,
-    },
-    session: {
-      roomCode: "TEST",
-      playerId: "preview-player",
-      playerRef: 1,
-    },
+  const state = {
+    ...(isResult ? finishedState : decisionState),
+    ...(fixture.state as Partial<PublicGameState>),
+    status: isResult ? "finished" : "round_decision",
+  } as PublicGameState;
+
+  const props: ScreenProps = {
+    state,
+    me: { ...meInformed, playerRef: 1, displayName: "Alaa", hasDecided: fixture.me.hasDecided },
+    session: { roomCode: "TEST", playerId: "preview-player", playerRef: 1 },
     refresh: () => {},
-  } satisfies ScreenProps;
+  };
 
   return (
     <div>
       <nav className="preview-nav">
-        <button
-          type="button"
-          onClick={() => setSelected("informedWin")}
-          className={selected === "informedWin" ? "active" : ""}
-        >
-          Informed win
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setSelected("hiddenWin")}
-          className={selected === "hiddenWin" ? "active" : ""}
-        >
-          Hidden win
-        </button>
+        {(Object.keys(labels) as FixtureName[]).map((name) => (
+          <button
+            key={name}
+            type="button"
+            className={selected === name ? "active" : ""}
+            onClick={() => {
+              resetDecisionMock();
+              setSelected(name);
+            }}
+          >
+            {labels[name]}
+          </button>
+        ))}
       </nav>
 
-      <ResultPage {...props} />
+      {isResult ? <ResultPage {...props} /> : <RoundDecisionPage {...props} />}
     </div>
   );
 }

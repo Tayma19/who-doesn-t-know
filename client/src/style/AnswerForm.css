@@ -1,97 +1,52 @@
 .answer-form {
   display: grid;
-  gap: 14px;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 20px;
-  margin-bottom: 20px;
-  border: 1px solid #334155;
-  border-radius: 14px;
-  background: #1e293b;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  gap: 0.55rem;
+  padding: 1.7rem 1.3rem 1.4rem;
 }
 
+.answer-form::before {
+  content: "";
+  position: absolute;
+  top: -0.75rem;
+  left: 1.3rem;
+  width: 4.6rem;
+  height: 1.45rem;
+  background: rgba(255, 92, 147, 0.92);
+  transform: rotate(2.5deg);
+}
+
+
 .answer-form__title {
-  margin: 0;
-  color: #f8fafc;
-  font-size: 1.25rem;
+  font-size: 1.8rem;
 }
 
 .answer-form__asker {
-  margin: 0;
-  color: #94a3b8;
-  font-size: 0.9rem;
+  color: var(--ink-soft);
+  font-weight: 600;
 }
 
 .answer-form__question {
-  margin: 0;
-  padding: 12px;
-  border-left: 3px solid #7c3aed;
-  border-radius: 4px;
-  background: #0f172a;
-  color: #cbd5e1;
-  line-height: 1.6;
-  overflow-wrap: anywhere;
+  padding: 0.85rem 1rem;
+  border-left: 6px solid var(--cut);
+  background: var(--paper-tint);
+  font-family: var(--display);
+  font-stretch: 90%;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.15;
 }
 
 .answer-form__label {
-  margin-bottom: -6px;
-  color: #cbd5e1;
-  font-size: 0.9rem;
+  margin-top: 0.3rem;
   font-weight: 600;
-}
-
-.answer-form__textarea {
-  box-sizing: border-box;
-  width: 100%;
-  min-height: 90px;
-  padding: 12px;
-  border: 1px solid #475569;
-  border-radius: 8px;
-  background: #0f172a;
-  color: #f8fafc;
-  font: inherit;
-  resize: vertical;
-}
-
-.answer-form__textarea:focus {
-  outline: 2px solid #7c3aed;
-  outline-offset: 2px;
+  font-size: 0.95rem;
 }
 
 .answer-form__button {
-  min-height: 44px;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
-  color: #ffffff;
-  font: inherit;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
-  transition: all 0.2s ease;
-}
-
-.answer-form__button:hover:not(:disabled) {
-  background: linear-gradient(135deg, #6d28d9 0%, #5b21b6 100%);
-}
-
-.answer-form__button:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-  box-shadow: none;
+  margin-top: 0.4rem;
 }
 
 .answer-form__error {
-  margin: 0;
-  color: #f87171;
-  font-size: 0.9rem;
-}
-
-@media (max-width: 480px) {
-  .ask-form,
-  .answer-form {
-    padding: 16px;
-  }
+  color: #b0003a;
+  font-weight: 600;
 }
