@@ -1,8 +1,39 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import type { ScreenProps } from "../types";
+import { createGame } from "../api/lobby.api";
+import { saveSession } from "../api/session";
 import "../style/ResultPage.css";
 
-export default function ResultPage({ state }: ScreenProps) {
+export default function ResultPage({ state, me }: ScreenProps) {
+  const navigate = useNavigate();
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
   const result = state.result;
+
+  async function handlePlayAgain() {
+    try {
+      setBusy(true);
+      setError("");
+
+      const game = await createGame(me.displayName);
+
+      saveSession({
+        roomCode: game.roomCode,
+        playerId: game.playerId,
+        playerRef: game.playerRef,
+      });
+
+      navigate(`/room/${game.roomCode}`);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Couldn't create a new game.",
+      );
+    } finally {
+      setBusy(false);
+    }
+  }
 
   if (!result) {
     return (
@@ -13,7 +44,7 @@ export default function ResultPage({ state }: ScreenProps) {
   }
 
   const hiddenPlayer = state.players.find(
-    (player) => player.ref === result.hiddenPlayerRef
+    (player) => player.ref === result.hiddenPlayerRef,
   );
 
   const playersWithVotes = state.players
@@ -38,6 +69,25 @@ export default function ResultPage({ state }: ScreenProps) {
         </p>
 
         <p>The secret was: {result.secretTip}</p>
+
+        <div className="result-rematch">
+          {me.isHost ? (
+            <>
+              <p>Start a fresh lobby, then share its invite link so everyone can join.</p>
+              <button type="button" onClick={handlePlayAgain} disabled={busy}>
+                {busy ? "Creating lobby..." : "Create rematch lobby"}
+              </button>
+              {error && <p className="result-rematch__error" role="alert">{error}</p>}
+            </>
+          ) : (
+            <>
+              <p>Want another round? Ask the host to create a new lobby and share its room code or invite link.</p>
+              <button type="button" onClick={() => navigate("/")}>
+                Join a rematch
+              </button>
+            </>
+          )}
+        </div>
       </section>
 
       <section>
@@ -63,7 +113,7 @@ export default function ResultPage({ state }: ScreenProps) {
                   <td>
                     {player.displayName}
                     {isAccused && (
-                      <span className="accused-label">(Accused)</span>
+                      <span className="accused-label"> (Accused)</span>
                     )}
                   </td>
 

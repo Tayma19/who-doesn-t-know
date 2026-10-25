@@ -130,3 +130,11 @@
     margin-top: 2.75rem;
   }
 }
+
+.home-card__invite {
+  margin: 0 0 0.6rem;
+  padding: 0.7rem;
+  background: var(--mint);
+  color: var(--ink);
+  font-weight: 700;
+}

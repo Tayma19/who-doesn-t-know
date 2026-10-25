@@ -93,3 +93,36 @@
   font-weight: 600;
   vertical-align: middle;
 }
+
+.result-rematch {
+  margin-top: 1.4rem;
+  padding-top: 1rem;
+  border-top: 2px dashed rgba(25, 25, 45, 0.25);
+}
+
+.result-rematch p {
+  margin-bottom: 0.8rem;
+  font-size: 1rem;
+}
+
+.result-rematch button,
+.lobby-page__invite button {
+  min-height: 3rem;
+  padding: 0.65rem 1rem;
+  border: 2px solid var(--ink);
+  background: var(--note);
+  color: var(--ink);
+  font-weight: 800;
+  box-shadow: 3px 3px 0 var(--desk-shade);
+  cursor: pointer;
+}
+
+.result-rematch button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.result-rematch__error {
+  margin-top: 0.75rem;
+  color: #8b1e2d;
+}

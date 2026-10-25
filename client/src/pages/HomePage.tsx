@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { createGame, joinGame, type JoinResult } from "../api/lobby.api";
 import { saveSession } from "../api/session";
@@ -14,6 +14,15 @@ export default function HomePage() {
   const [busy, setBusy] = useState<"create" | "join" | null>(null);
   const [createError, setCreateError] = useState<string | null>(null);
   const [joinError, setJoinError] = useState<string | null>(null);
+  const [cameFromInvite, setCameFromInvite] = useState(false);
+
+  useEffect(() => {
+    const invitedCode = new URLSearchParams(window.location.search).get("join");
+    if (invitedCode && /^[a-z0-9]{5}$/i.test(invitedCode)) {
+      setJoinCode(invitedCode.toUpperCase());
+      setCameFromInvite(true);
+    }
+  }, []);
 
   const enter = (r: JoinResult) => {
     saveSession({
@@ -102,6 +111,7 @@ export default function HomePage() {
 
         <section className="home-card">
           <h2>Join game</h2>
+          {cameFromInvite && <p className="home-card__invite" role="status">Invite link opened. Add your name to join the new lobby.</p>}
           <form onSubmit={handleJoin} noValidate>
             <label htmlFor="join-code">Room code</label>
             <input

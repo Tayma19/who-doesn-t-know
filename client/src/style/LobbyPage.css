@@ -127,3 +127,13 @@
   padding-top: 0.5rem;
   border-top: 2px dashed rgba(255, 255, 255, 0.4);
 }
+
+.lobby-page__invite {
+  display: grid;
+  justify-items: start;
+  gap: 0.65rem;
+  color: var(--on-desk);
+}
+
+.lobby-page__invite p { margin: 0; }
+.lobby-page__invite-status { overflow-wrap: anywhere; }
