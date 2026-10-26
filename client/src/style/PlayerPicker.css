@@ -1,28 +1,19 @@
 .player-picker {
-  margin-bottom: 12px;
+  display: grid;
+  gap: 0.35rem;
 }
 
 .player-picker__label {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 0.9rem;
   font-weight: 600;
-  color: #cbd5e1;
+  font-size: 0.95rem;
 }
 
 .player-picker__select {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #475569;
-  border-radius: 8px;
-  background-color: #0f172a;
-  font-size: 0.95rem;
-  color: #f8fafc;
-  outline: none;
-  cursor: pointer;
-  transition: border-color 0.2s ease;
-}
-
-.player-picker__select:focus {
-  border-color: #7c3aed;
+  appearance: none;
+  padding-right: 2.6rem;
+  background-color: var(--paper);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='10' viewBox='0 0 16 10'><path d='M1 1l7 7 7-7' fill='none' stroke='%2314115c' stroke-width='2.5'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 0.95rem center;
+  font-weight: 600;
 }

@@ -1,4 +1,3 @@
-
 import {
   BadRequestException,
   ConflictException,
@@ -10,34 +9,32 @@ import { InjectModel } from '@nestjs/mongoose';
 import { randomInt } from 'node:crypto';
 import { Model } from 'mongoose';
 import { CounterService } from '../counters/counters.service';
+import { GameplayReadService } from '../gameplay/gameplay-read.service';
+import { Tip, TipDocument } from '../tips/schemas/tip.schema';
 import { CreateGameDto } from './dto/create-game.dto';
 import { JoinGameDto } from './dto/join-game.dto';
 import { PlayerActionDto } from './dto/player-action.dto';
 import { PrivateRoleQueryDto } from './dto/private-role-query.dto';
-import { StateBuilder } from './state.builder';
-import { Tip, TipDocument } from '../tips/schemas/tip.schema';
 import { Game, GameDocument } from './schemas/game.schema';
 import { Player, PlayerDocument } from './schemas/player.schema';
-
+import { StateBuilder } from './state.builder';
 import { generatePlayerId, generateRoomCode } from './utils/codes';
 
 @Injectable()
 export class GamesService {
   private readonly logger = new Logger(GamesService.name);
   private static readonly ROOM_CODE_ATTEMPTS = 10;
-
   private static readonly MAX_PLAYERS = 10;
-
 
   constructor(
     @InjectModel(Game.name)
     private readonly gameModel: Model<GameDocument>,
     @InjectModel(Player.name)
     private readonly playerModel: Model<PlayerDocument>,
-
     @InjectModel(Tip.name)
     private readonly tipModel: Model<TipDocument>,
     private readonly counterService: CounterService,
+    private readonly gameplayRead: GameplayReadService,
     private readonly stateBuilder: StateBuilder,
   ) {}
 
@@ -73,12 +70,7 @@ export class GamesService {
 
     this.logger.log(`Game created: room code ${roomCode}`);
 
-    return {
-      gameId,
-      roomCode,
-      playerId,
-      playerRef,
-    };
+    return { gameId, roomCode, playerId, playerRef };
   }
 
   async joinGame(joinGameDto: JoinGameDto) {
@@ -87,10 +79,7 @@ export class GamesService {
     const normalizedName = displayName.toLowerCase();
     const game = await this.gameModel.findOne({ roomCode });
 
-    if (!game) {
-      throw new NotFoundException('Game not found');
-    }
-
+    if (!game) throw new NotFoundException('Game not found');
     if (game.status !== 'lobby') {
       throw new ConflictException('Game is no longer accepting players');
     }
@@ -98,7 +87,6 @@ export class GamesService {
     const playerCount = await this.playerModel.countDocuments({
       gameId: game.id,
     });
-
     if (playerCount >= GamesService.MAX_PLAYERS) {
       throw new ConflictException('Game is full');
     }
@@ -107,7 +95,6 @@ export class GamesService {
       gameId: game.id,
       normalizedName,
     });
-
     if (existingPlayer) {
       throw new ConflictException('Display name is already used in this game');
     }
@@ -115,14 +102,23 @@ export class GamesService {
     const playerRef = await this.counterService.next('players');
     const playerId = generatePlayerId();
 
-    await this.playerModel.create({
-      id: playerRef,
-      gameId: game.id,
-      displayName,
-      normalizedName,
-      tempId: playerId,
-      isHost: false,
-    });
+    try {
+      await this.playerModel.create({
+        id: playerRef,
+        gameId: game.id,
+        displayName,
+        normalizedName,
+        tempId: playerId,
+        isHost: false,
+      });
+    } catch (error) {
+      if (error === 11000) {
+        throw new ConflictException(
+          'Display name is already used in this game',
+        );
+      }
+      throw error;
+    }
 
     return {
       gameId: game.id,
@@ -133,13 +129,7 @@ export class GamesService {
   }
 
   async startGame(roomCode: string, playerActionDto: PlayerActionDto) {
-    const normalizedRoomCode = roomCode.trim().toUpperCase();
-    const game = await this.gameModel.findOne({ roomCode: normalizedRoomCode });
-
-    if (!game) {
-      throw new NotFoundException('Game not found');
-    }
-
+    const game = await this.findGame(roomCode);
     if (game.status !== 'lobby') {
       throw new ConflictException('Game has already started');
     }
@@ -148,11 +138,7 @@ export class GamesService {
       gameId: game.id,
       tempId: playerActionDto.playerId,
     });
-
-    if (!player) {
-      throw new NotFoundException('Player not found in this game');
-    }
-
+    if (!player) throw new NotFoundException('Player not found in this game');
     if (!player.isHost) {
       throw new ConflictException('Only the host can start the game');
     }
@@ -161,15 +147,12 @@ export class GamesService {
       .find({ gameId: game.id })
       .sort({ id: 1 })
       .lean();
-
     const playersNeeded = 4 - players.length;
-
     if (playersNeeded > 0) {
       throw new BadRequestException(`${playersNeeded} more players needed`);
     }
 
     const activeTips = await this.tipModel.find({ active: true }).lean();
-
     if (activeTips.length === 0) {
       throw new BadRequestException('No active tip available');
     }
@@ -196,10 +179,7 @@ export class GamesService {
       { new: true },
     );
 
-    if (!startedGame) {
-      throw new ConflictException('Game has already started');
-    }
-
+    if (!startedGame) throw new ConflictException('Game has already started');
     this.logger.log(`Game started with ${players.length} players`);
 
     return {
@@ -214,78 +194,77 @@ export class GamesService {
     roomCode: string,
     privateRoleQueryDto: PrivateRoleQueryDto,
   ) {
-    const normalizedRoomCode = roomCode.trim().toUpperCase();
-    const game = await this.gameModel.findOne({ roomCode: normalizedRoomCode });
-
-    if (!game) {
-      throw new NotFoundException('Game not found');
-    }
-
+    const game = await this.findGame(roomCode);
     const player = await this.playerModel.findOne({
       gameId: game.id,
       tempId: privateRoleQueryDto.playerId,
     });
-
-    if (!player) {
-      throw new NotFoundException('Player not found in this game');
-    }
-
-    const actionFlags = {
-      hasDecided: false,
-      hasVoted: false,
-    };
+    if (!player) throw new NotFoundException('Player not found in this game');
 
     if (game.status === 'lobby') {
       return {
-        role: 'waiting',
+        playerRef: player.id,
+        displayName: player.displayName,
+        isHost: player.isHost,
+        role: 'waiting' as const,
         secretTip: null,
-        ...actionFlags,
+        hasDecided: false,
+        hasVoted: false,
       };
     }
 
-    const isHiddenPlayer = game.hiddenPlayerRef === player.id;
+    const [hasDecided, hasVoted] = await Promise.all([
+      this.gameplayRead.hasDecision(game.id, game.decisionNumber, player.id),
+      this.gameplayRead.hasVote(game.id, game.votingNumber, player.id),
+    ]);
 
-    if (isHiddenPlayer) {
+    if (game.hiddenPlayerRef === player.id) {
       return {
-        role: 'hidden',
+        playerRef: player.id,
+        displayName: player.displayName,
+        isHost: player.isHost,
+        role: 'hidden' as const,
         secretTip: null,
-        ...actionFlags,
+        hasDecided,
+        hasVoted,
       };
     }
 
     if (!game.secretTipId) {
       throw new NotFoundException('Secret tip not found for this game');
     }
-
     const secretTip = await this.tipModel
       .findOne({ id: game.secretTipId })
       .lean();
-
     if (!secretTip) {
       throw new NotFoundException('Secret tip not found for this game');
     }
 
     return {
-      role: 'informed',
+      playerRef: player.id,
+      displayName: player.displayName,
+      isHost: player.isHost,
+      role: 'informed' as const,
       secretTip: secretTip.text,
-      ...actionFlags,
+      hasDecided,
+      hasVoted,
     };
   }
 
   async getPublicState(roomCode: string) {
-    const normalizedRoomCode = roomCode.trim().toUpperCase();
-    const game = await this.gameModel.findOne({ roomCode: normalizedRoomCode });
+    return this.stateBuilder.build(await this.findGame(roomCode));
+  }
 
-    if (!game) {
-      throw new NotFoundException('Game not found');
-    }
-
-    return this.stateBuilder.build(game);
+  private async findGame(roomCode: string) {
+    const game = await this.gameModel.findOne({
+      roomCode: roomCode.trim().toUpperCase(),
+    });
+    if (!game) throw new NotFoundException('Game not found');
+    return game;
   }
 
   private shuffle<T>(items: T[]): T[] {
     const shuffled = [...items];
-
     for (let index = shuffled.length - 1; index > 0; index -= 1) {
       const randomIndex = randomInt(index + 1);
       [shuffled[index], shuffled[randomIndex]] = [
@@ -293,10 +272,8 @@ export class GamesService {
         shuffled[index],
       ];
     }
-
     return shuffled;
   }
-
 
   private async reserveRoomCode(): Promise<string> {
     for (
@@ -309,12 +286,8 @@ export class GamesService {
         roomCode,
         status: { $ne: 'finished' },
       });
-
-      if (!existingGame) {
-        return roomCode;
-      }
+      if (!existingGame) return roomCode;
     }
-
     throw new ConflictException('Could not generate a unique room code');
   }
 }
