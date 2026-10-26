@@ -11,7 +11,7 @@ export interface ScreenProps {
   refresh: () => void;
 }
 
-// ---------- Contract (from the backend) ----------
+
 
 export type GameStatus =
   | "lobby"

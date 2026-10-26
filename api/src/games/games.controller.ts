@@ -1,4 +1,5 @@
 
+
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import {
   ApiCreatedResponse,
@@ -12,9 +13,7 @@ import { JoinGameDto } from './dto/join-game.dto';
 import { PlayerActionDto } from './dto/player-action.dto';
 import { PrivateRoleQueryDto } from './dto/private-role-query.dto';
 
-
 import { GamesService } from './games.service';
-
 @ApiTags('games')
 @Controller('games')
 export class GamesController {
@@ -69,5 +68,4 @@ export class GamesController {
   getPublicState(@Param('roomCode') roomCode: string) {
     return this.gamesService.getPublicState(roomCode);
   }
-
 }

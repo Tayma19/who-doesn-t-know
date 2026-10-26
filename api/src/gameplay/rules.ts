@@ -7,13 +7,32 @@ export function advanceTurn(
   turnsCompletedInRound: number;
   roundCompleted: boolean;
 } {
-  const nextTurnIndex = (currentTurnIndex + 1) % playerCount;
-  const newTurnsCompleted = turnsCompletedInRound + 1;
-  const roundCompleted = newTurnsCompleted === playerCount;
+  if (!Number.isInteger(playerCount) || playerCount < 1) {
+    throw new RangeError('playerCount must be a positive integer');
+  }
+
+  if (
+    !Number.isInteger(currentTurnIndex) ||
+    currentTurnIndex < 0 ||
+    currentTurnIndex >= playerCount
+  ) {
+    throw new RangeError('currentTurnIndex is out of range');
+  }
+
+  if (
+    !Number.isInteger(turnsCompletedInRound) ||
+    turnsCompletedInRound < 0 ||
+    turnsCompletedInRound >= playerCount
+  ) {
+    throw new RangeError('turnsCompletedInRound is out of range');
+  }
+
+  const completed = turnsCompletedInRound + 1;
+  const roundCompleted = completed === playerCount;
 
   return {
-    currentTurnIndex: nextTurnIndex,
-    turnsCompletedInRound: roundCompleted ? 0 : newTurnsCompleted,
+    currentTurnIndex: (currentTurnIndex + 1) % playerCount,
+    turnsCompletedInRound: roundCompleted ? 0 : completed,
     roundCompleted,
   };
 }
@@ -25,37 +44,41 @@ export function shouldEnterDecision(completedRound: number): boolean {
 export function resolveDecision(
   choices: ('continue' | 'vote')[],
 ): 'vote' | 'continue' {
-  const voteCount = choices.filter((c) => c === 'vote').length;
-  return voteCount > choices.length / 2 ? 'vote' : 'continue';
+  if (!choices.length) {
+    throw new RangeError('At least one decision is required');
+  }
+
+  const votes = choices.filter((choice) => choice === 'vote').length;
+
+  return votes > choices.length / 2 ? 'vote' : 'continue';
 }
 
 export function resolveVotes(
-  votes: { voterRef: string; suspectRef: string }[],
-): { accusedRef: string } | { tiedRefs: string[] } {
-  const counts = new Map<string, number>();
-
-  for (const v of votes) {
-    counts.set(v.suspectRef, (counts.get(v.suspectRef) || 0) + 1);
+  votes: { voterRef: number; suspectRef: number }[],
+): { accusedRef: number } | { tiedRefs: number[] } {
+  if (!votes.length) {
+    throw new RangeError('At least one vote is required');
   }
 
-  let maxVotes = 0;
-  let tied: string[] = [];
+  const counts = new Map<number, number>();
 
-  for (const [ref, count] of counts.entries()) {
-    if (count > maxVotes) {
-      maxVotes = count;
-      tied = [ref];
-    } else if (count === maxVotes) {
-      tied.push(ref);
-    }
+  for (const vote of votes) {
+    counts.set(vote.suspectRef, (counts.get(vote.suspectRef) ?? 0) + 1);
   }
 
-  return tied.length === 1 ? { accusedRef: tied[0] } : { tiedRefs: tied };
+  const max = Math.max(...counts.values());
+
+  const tiedRefs = [...counts.entries()]
+    .filter(([, count]) => count === max)
+    .map(([ref]) => ref)
+    .sort((a, b) => a - b);
+
+  return tiedRefs.length === 1 ? { accusedRef: tiedRefs[0] } : { tiedRefs };
 }
 
 export function decideWinner(
-  accusedRef: string,
-  hiddenPlayerRef: string,
+  accusedRef: number,
+  hiddenPlayerRef: number,
 ): 'informed' | 'hidden' {
   return accusedRef === hiddenPlayerRef ? 'informed' : 'hidden';
 }

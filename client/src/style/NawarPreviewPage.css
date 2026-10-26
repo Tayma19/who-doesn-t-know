@@ -1,72 +1,30 @@
-
 .nawar-preview-container {
-  min-height: 100vh;
-  background-color: #0f172a;
-  color: #f8fafc;
-  padding: 1rem;
-}
-
-@media (min-width: 640px) {
-  .nawar-preview-container {
-    padding: 1.5rem;
-  }
+  min-height: 100dvh;
 }
 
 .nawar-preview-header {
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 1.5rem;
-  max-width: 56rem;
+  padding: 1.25rem 1rem 0;
+  text-align: center;
+  color: #fff;
 }
 
 .nawar-preview-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #f8fafc;
+  font-size: 1.8rem;
 }
 
 .nawar-preview-subtitle {
-  margin-top: 0.5rem;
-  font-size: 0.875rem;
-  color: #94a3b8;
+  margin-top: 0.3rem;
+  color: var(--on-desk);
 }
 
 .nawar-preview-nav {
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 1.5rem;
   display: flex;
-  max-width: 56rem;
   flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.fixture-btn {
-  border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background-color: #1e293b;
-  color: #cbd5e1;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.fixture-btn:hover {
-  background-color: #334155;
-  color: #ffffff;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 1rem;
 }
 
 .fixture-btn.active {
-  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
-  color: #ffffff;
-  border-color: transparent;
-  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
-}
-
-.nawar-preview-content {
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 56rem;
+  background: var(--cut);
 }

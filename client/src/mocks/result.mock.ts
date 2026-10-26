@@ -1,4 +1,4 @@
-// --- Result Fixtures ---
+
 
 export const informedWin = {
   state: {

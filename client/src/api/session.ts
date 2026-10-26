@@ -3,14 +3,14 @@ import type { Session } from "../types";
 const keyFor = (roomCode: string) => `wdk_session_${roomCode.toUpperCase()}`;
 const LAST_ROOM_KEY = "wdk_last_room";
 
-/** Remember who this browser tab is (survives refresh, separate per tab). */
+
 export function saveSession(s: Session): void {
   const room = s.roomCode.toUpperCase();
   try {
     sessionStorage.setItem(keyFor(room), JSON.stringify({ ...s, roomCode: room }));
     sessionStorage.setItem(LAST_ROOM_KEY, room);
   } catch {
-    // storage unavailable: the player will have to join again after a refresh
+   
   }
 }
 
