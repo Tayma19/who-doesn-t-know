@@ -42,13 +42,23 @@ cd api
 npm ci
 ```
 
-Copy `api/.env.example` to `api/.env`. In PowerShell, while inside `api/`:
+Each team member must create their own `api/.env` after cloning the project. This file is not uploaded to GitHub; the tracked `.env.example` is the template.
+
+While inside `api/`, copy the template using the command for your terminal. Only do this when you do not already have a `.env` file, so you keep any existing settings.
+
+**Git Bash, macOS, or Linux:**
+
+```sh
+cp .env.example .env
+```
+
+**PowerShell:**
 
 ```powershell
 Copy-Item .env.example .env
 ```
 
-Set these values in `.env`:
+Open `api/.env` in VS Code, fill in the following values, and save the file. Make sure its name is exactly `.env`, with no `.txt` extension:
 
 ```dotenv
 MONGODB_URI=mongodb://127.0.0.1:27017/who-doesnt-know
@@ -64,7 +74,11 @@ PORT=3000
 | `FRONTEND_URL` | Allowed frontend origin for CORS; defaults to `http://localhost:5173` when unset. |
 | `PORT` | API listening port; defaults to `3000` when unset. |
 
-The example environment file contains empty values, so populate them before starting. Keep `.env` local; it is ignored by Git.
+The example environment file contains empty values, so populate them before starting. The connection string above uses MongoDB running on your own computer. Make sure your local MongoDB service is running. If you use MongoDB Atlas instead, replace `MONGODB_URI` with your Atlas connection string.
+
+Replace the example `INTERNAL_TOOL_TOKEN` with a local development token of your choice. Keep `.env` local; it is ignored by Git and should not be committed.
+
+After saving `.env`, start the API from `api/`. If it was already running when you changed the file, stop it with Ctrl+C and start it again:
 
 ```sh
 npm run start:dev
