@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000";
+const API_URL = `http://${window.location.hostname}:3000`;
 export const USE_MOCKS = false;
 
 
