@@ -1,0 +1,35 @@
+.notice-page {
+  width: min(100% - 2rem, 28rem);
+  margin: 4rem auto;
+  padding: 1.8rem 1.5rem;
+  display: grid;
+  gap: 0.9rem;
+  justify-items: start;
+}
+
+.notice-page::before {
+  content: "";
+  position: absolute;
+  top: -0.8rem;
+  left: 1.5rem;
+  width: 5rem;
+  height: 1.55rem;
+  background: rgba(255, 92, 147, 0.9);
+  transform: rotate(-3deg);
+}
+
+.notice-page h1 {
+  font-size: 2.2rem;
+}
+
+.notice-page__button {
+  margin-top: 0.4rem;
+}
+
+.route-error {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  width: var(--page);
+  margin: 0.75rem auto 0;
+}

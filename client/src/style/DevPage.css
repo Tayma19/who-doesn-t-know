@@ -1,0 +1,32 @@
+
+
+.dev-page {
+  width: min(100% - 2rem, 40rem);
+  margin: 2rem auto;
+  padding: 1.6rem 1.4rem;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.dev-page h1 {
+  font-size: 2rem;
+}
+
+.dev-page label {
+  display: grid;
+  gap: 0.3rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.dev-page code {
+  padding: 0.05rem 0.35rem;
+  background: var(--paper-tint);
+  border-radius: 4px;
+}
+
+.dev-page__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}

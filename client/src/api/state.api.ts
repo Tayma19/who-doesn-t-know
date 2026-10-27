@@ -1,0 +1,18 @@
+import { request, USE_MOCKS } from "./http";
+import * as mock from "../mocks/state.mock";
+import type { PrivateRoleView, PublicGameState, Session } from "../types";
+
+
+export function getState(roomCode: string): Promise<PublicGameState> {
+  if (USE_MOCKS) return mock.getState(roomCode);
+  return request<PublicGameState>("GET", `/games/${roomCode}/state`);
+}
+
+
+export function getMe(session: Session): Promise<PrivateRoleView> {
+  if (USE_MOCKS) return mock.getMe(session);
+  return request<PrivateRoleView>(
+    "GET",
+    `/games/${session.roomCode}/me?playerId=${encodeURIComponent(session.playerId)}`,
+  );
+}
